@@ -1,0 +1,208 @@
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 10px 28px;
+}
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  background: var(--primary);
+  color: var(--button-text);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+.brand h1 {
+  font-size: 20px;
+  margin: 0;
+  color: var(--primary);
+}
+.brand p {
+  font-size: 13px;
+  margin: 2px 0 0;
+  color: var(--muted);
+}
+.tree {
+  flex: 1;
+  overflow: auto;
+}
+.folder-block {
+  margin-bottom: 10px;
+}
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.file-item {
+  padding-left: 14px;
+}
+.tree-row,
+.file-row {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: var(--radius-control);
+}
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tree-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-icon {
+  flex: 0 0 auto;
+}
+.tree-row.active,
+.file-row.active {
+  background: var(--soft);
+  color: var(--primary);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+.file-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.file-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-row small {
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+.delete-mark {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--outline);
+  border-radius: 50%;
+  background: var(--button-secondary-bg);
+  color: var(--error);
+  font-family: var(--font-code);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+.delete-mark:hover,
+.delete-mark:focus-visible {
+  border-color: var(--error);
+  background: var(--error);
+  color: var(--button-text);
+}
+.sidebar-actions {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.secondary input {
+  display: none;
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 9px 10px;
+  border-bottom: 2px solid transparent;
+}
+.tab.active {
+  color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 800;
+}
+.bar {
+  height: 8px;
+  max-width: 420px;
+  flex: 1;
+  background: var(--question-card-inner);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar div {
+  height: 100%;
+  background: var(--primary);
+  border-radius: inherit;
+  transition: width 0.2s;
+}
+.order-strip {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--outline);
+  background: var(--strip);
+  color: var(--text);
+  padding: 14px 24px;
+}
+.progress-status,
+.progress-time {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.progress-status {
+  flex: 1;
+}
+.progress-status strong {
+  flex: 0 0 auto;
+}
+.progress-time {
+  flex: 1;
+  justify-content: flex-end;
+}
+.order-toggle {
+  min-width: 88px;
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  font-weight: 800;
+  padding: 6px 14px;
+}
+.order-toggle:hover,
+.order-toggle:focus-visible {
+  border-color: var(--primary);
+}
+.timer-chip {
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  background: var(--input-bg);
+  color: var(--primary);
+  font-weight: 800;
+  padding: 5px 12px;
+}
+.theme-toggle {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-control);
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  z-index: 30;
+}
+.theme-toggle[aria-pressed="true"] {
+  background: var(--button-bg);
+  color: var(--button-text);
+}

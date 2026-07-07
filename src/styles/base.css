@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Asta+Sans:opsz,wght@8..144,400..800&display=swap");
+
+:root {
+  --surface: #fdfcfc;
+  --sidebar: #fdfcfc;
+  --card: #201d1d;
+  --strip: #f1eeee;
+  --soft: #f8f7f7;
+  --primary: #201d1d;
+  --primary-container: #302c2c;
+  --text: #201d1d;
+  --muted: #646262;
+  --outline: rgba(15, 0, 0, 0.12);
+  --line: #646262;
+  --error: #ff3b30;
+  --ok: #30d158;
+  --button-bg: #201d1d;
+  --button-text: #fdfcfc;
+  --button-secondary-bg: #fdfcfc;
+  --button-secondary-text: #201d1d;
+  --input-bg: #f8f7f7;
+  --question-card-bg: #201d1d;
+  --question-card-border: #646262;
+  --question-card-text: #fdfcfc;
+  --question-card-muted: #9a9898;
+  --question-card-inner: #302c2c;
+  --question-code-bg: #0f0000;
+  --question-code-text: #f8f7f7;
+  --question-code-accent: #30d158;
+  --syntax-keyword: #007aff;
+  --syntax-string: #30d158;
+  --syntax-number: #ff9f0a;
+  --syntax-comment: #9a9898;
+  --answer-bg: #f1eeee;
+  --answer-text: #201d1d;
+  --code-red: #ff3b30;
+  --code-yellow: #ff9f0a;
+  --code-green: #30d158;
+  --radius-control: 4px;
+  --radius-card: 0;
+  --font-ui:
+    "Asta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-code:
+    "Berkeley Mono", "JetBrains Mono", "IBM Plex Mono", "Geist Mono",
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    monospace;
+  font-family: var(--font-ui);
+  color: var(--text);
+  background: var(--surface);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+.app-shell[data-theme="resend"] {
+  --surface: #212121;
+  --sidebar: #212121;
+  --card: #06060a;
+  --strip: #101012;
+  --soft: #0a0a0c;
+  --primary: #fcfdff;
+  --primary-container: #fcfdff;
+  --text: #fcfdff;
+  --muted: #a1a4a5;
+  --outline: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.06);
+  --error: #ff2047;
+  --ok: #11ff99;
+  --button-bg: #fcfdff;
+  --button-text: #000;
+  --button-secondary-bg: #101012;
+  --button-secondary-text: #fcfdff;
+  --input-bg: #0a0a0c;
+  --question-card-bg: #06060a;
+  --question-card-border: rgba(255, 255, 255, 0.14);
+  --question-card-text: rgba(252, 253, 255, 0.86);
+  --question-card-muted: #a1a4a5;
+  --question-card-inner: #0a0a0c;
+  --question-code-bg: #000;
+  --question-code-text: #fcfdff;
+  --question-code-accent: #3b9eff;
+  --syntax-keyword: #3b9eff;
+  --syntax-string: #11ff99;
+  --syntax-number: #ffc53d;
+  --syntax-comment: #888e90;
+  --answer-bg: #0a0a0c;
+  --answer-text: rgba(252, 253, 255, 0.86);
+  --code-red: #ff2047;
+  --code-yellow: #ffc53d;
+  --code-green: #11ff99;
+  --radius-control: 8px;
+  --radius-card: 12px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--surface);
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.primary,
+.secondary,
+.ghost,
+.danger {
+  border-radius: var(--radius-control);
+  padding: 9px 12px;
+  border: 1px solid var(--primary);
+  font-weight: 500;
+}
+.primary {
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+.secondary {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+}
+.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+.danger {
+  border-color: var(--error);
+  background: transparent;
+  color: var(--error);
+}
+.danger.active {
+  background: var(--error);
+  color: var(--button-text);
+}

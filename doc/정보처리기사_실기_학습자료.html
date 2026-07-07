@@ -1,0 +1,484 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정보처리기사 실기 개념요약 — 학습자료</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#faf9f5; --surface:#ffffff; --ink:#1a1915; --muted:#6e6a5e;
+  --accent:#c96442; --accent-soft:#f3e8e2; --line:#e5e1d8;
+  --key:#2f5d50; --key-soft:#e6efec;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",sans-serif;line-height:1.7;font-size:15.5px}
+h1,h2,h3{font-family:"Noto Serif KR",serif;line-height:1.35}
+h1{font-size:1.7rem;margin:.2rem 0 .4rem}
+h2{font-size:1.35rem;border-bottom:2px solid var(--accent);padding-bottom:.35rem;margin-top:2.6rem}
+h3{font-size:1.1rem;color:var(--ink);margin:2.4rem 0 .8rem;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:8px;padding:.55rem 1rem}
+h3::before{content:"📌 ";font-size:.9em}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.2rem 4rem}
+header.hero{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.8rem;margin-bottom:1.4rem}
+header.hero .meta{color:var(--muted);font-size:.85rem}
+nav.toc{position:sticky;top:0;background:rgba(250,249,245,.96);backdrop-filter:blur(4px);border-bottom:1px solid var(--line);padding:.55rem 0;z-index:10;font-size:.86rem}
+nav.toc .in{max-width:880px;margin:0 auto;padding:0 1.2rem;display:flex;gap:1rem;flex-wrap:wrap}
+nav.toc a{color:var(--muted);text-decoration:none;font-weight:700}
+nav.toc a:hover{color:var(--accent)}
+.goal{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--key);border-radius:10px;padding:1rem 1.3rem;margin:1rem 0}
+.goal li{margin:.2rem 0}
+.key{display:inline-block;background:var(--key-soft);color:var(--key);border-radius:6px;padding:.05rem .5rem;font-weight:700;font-size:.88em;margin-right:.3rem}
+.mn{background:var(--accent-soft);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:.8rem 1.1rem;margin:.9rem 0}
+.mn b.t{color:var(--accent)}
+table{border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem;background:var(--surface)}
+th,td{border:1px solid var(--line);padding:.45rem .65rem;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:#f0ede4;border-radius:4px;padding:.05rem .35rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.6rem 1rem;margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;color:var(--ink)}
+ul{padding-left:1.3rem}
+li{margin:.25rem 0}
+.pre-mermaid{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.8rem;overflow-x:auto;text-align:center}
+/* 과목 개요 카드 */
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:.9rem 0}
+.map .c{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:12px;padding:.75rem .8rem}
+.map .c .n{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.8rem;margin-bottom:.35rem}
+.map .c b{display:block;font-size:.92rem;line-height:1.35;margin-bottom:.3rem}
+.map .c small{color:var(--muted);font-size:.76rem;line-height:1.5;display:block}
+@media(max-width:720px){.map{grid-template-columns:1fr 1fr}}
+/* 절차 스텝 */
+.steps{display:flex;align-items:stretch;gap:.45rem;flex-wrap:wrap;margin:.9rem 0}
+.steps .s{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--key);border-radius:10px;padding:.65rem .7rem;text-align:center}
+.steps .s b{display:block;color:var(--key);font-size:.95rem;margin-bottom:.2rem}
+.steps .s small{color:var(--muted);font-size:.78rem;line-height:1.45;display:block}
+.steps .a{display:flex;align-items:center;color:var(--accent);font-weight:700;font-size:1.15rem}
+@media(max-width:720px){.steps{flex-direction:column}.steps .a{justify-content:center;transform:rotate(90deg)}}
+.quiz{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:.9rem 1.2rem;margin:.7rem 0}
+mark{background:#ffe89e;padding:0 .18rem;border-radius:3px}
+.exam{background:#fff8e1;border:1px solid #ecdcae;border-left:5px solid #d9a514;border-radius:10px;padding:.7rem 1.05rem;margin:.9rem 0;font-size:.93rem}
+.exam::before{content:"⭐ 기출 포인트";display:block;font-weight:700;color:#a87b00;margin-bottom:.25rem}
+footer{color:var(--muted);font-size:.8rem;margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem}
+@media print{nav.toc{display:none}body{font-size:11pt}details{page-break-inside:avoid}details[open] summary~*{display:block}}
+</style></head><body>
+<nav class="toc"><div class="in">
+<a href="#s1">1 요구사항 확인</a><a href="#s2">2 화면 설계</a><a href="#s3">3 데이터 입출력</a><a href="#s4">4 통합 구현</a><a href="#s5">5 인터페이스</a><a href="#recap">암기 총정리</a><a href="#quiz">자가 점검</a>
+</div></nav>
+<div class="wrap">
+
+<header class="hero">
+<h1>정보처리기사 실기 개념요약 학습자료</h1>
+<div class="meta">범위: 1~5과목 (요구사항 확인 · 화면 설계 · 데이터 입출력 구현 · 통합 구현 · 인터페이스 구현) · 생성일 2026-07-07</div>
+</header>
+
+<div class="goal"><b>학습 목표</b>
+<ul>
+<li>☐ 생명주기 모델·애자일·객체지향·디자인 패턴을 암기 키워드로 재현할 수 있다</li>
+<li>☐ UML 정적/동적 다이어그램을 구분하고 클래스 간 관계를 설명할 수 있다</li>
+<li>☐ 정규화 단계(1NF~5NF)와 이상 현상·무결성·키 종류를 서술할 수 있다</li>
+<li>☐ EAI 4유형·웹서비스 3요소(SOAP/WSDL/UDDI)·REST/JSON/XML/AJAX를 정의할 수 있다</li>
+</ul></div>
+
+<h3 style="margin-top:1rem">한눈에 보기</h3>
+<div class="map">
+<div class="c"><span class="n">1</span><b>요구사항 확인</b><small>생명주기 · 애자일<br>객체지향 · 아키텍처<br>디자인패턴 · 요구공학</small></div>
+<div class="c"><span class="n">2</span><b>화면 설계</b><small>UI/UX · 설계원칙<br>품질 요구사항<br>UML 다이어그램</small></div>
+<div class="c"><span class="n">3</span><b>데이터 입출력 구현</b><small>데이터모델 · 정규화<br>무결성 · 키<br>NoSQL · 마이닝</small></div>
+<div class="c"><span class="n">4</span><b>통합 구현</b><small>연계 메커니즘<br>EAI/ESB<br>웹서비스</small></div>
+<div class="c"><span class="n">5</span><b>인터페이스 구현</b><small>JSON · XML<br>AJAX · REST<br>DOM · XSLT</small></div>
+</div>
+
+<!-- ================= 1과목 ================= -->
+<h2 id="s1">1과목. 요구사항 확인</h2>
+
+<h3>소프트웨어 생명주기(SDLC) 모델</h3>
+<p>소프트웨어의 개발~폐기 전 과정을 단계화한 프로세스 모델. 타당성 검토→계획→요구분석→설계→구현→테스트→운영/유지보수.</p>
+<div class="mn"><b class="t">[폭프나반]</b> 생명주기 모델 종류 — <b>폭</b>포수 / <b>프</b>로토타이핑 / <b>나</b>선형 / <b>반</b>복적</div>
+<table><tr><th>모델</th><th>핵심</th></tr>
+<tr><td>폭포수(Waterfall)</td><td>순차 진행·후퇴 불가, 요구사항 명확할 때, 문서(산출물) 중심</td></tr>
+<tr><td>프로토타이핑</td><td>시제품으로 고객 피드백 → 요구사항 구체화, 요구 불명확 시 유리</td></tr>
+<tr><td>나선형(Spiral)</td><td>폭포수+프로토타입+<b>위험 분석</b>, 반복적 점진 개발, 대규모·고위험에 적합</td></tr>
+<tr><td>반복적(Iteration)</td><td>증분/진화 방식으로 나누어 릴리즈, 병렬 개발 가능</td></tr></table>
+<div class="mn"><b class="t">[계위개고]</b> 나선형 모델 절차 — <b>계</b>획 및 정의 → <b>위</b>험 분석 → <b>개</b>발 → <b>고</b>객 평가 (반복)</div>
+<div class="exam">나선형 모델은 <mark>"위험 분석"</mark>이 답의 핵심 키워드. "위험을 관리·최소화하며 점진적으로 개발하는 모델은?" 유형과 <mark>절차 4단계를 순서대로 쓰는 문제</mark>가 반복 출제.</div>
+
+<h3>애자일(Agile) 방법론</h3>
+<p><span class="key">유연하고 빠르게 개발하는 방법론</span> 절차·문서보다 <b>소통과 동작하는 SW</b>, 계약·계획보다 <b>고객 협업·변화 대응</b>을 중시(애자일 선언 4가치). 짧은 반복 주기로 개발.</p>
+<div class="box"><div class="boxt">애자일 유형 (XP · 스크럼 · 린 · 칸반)</div>
+<ul>
+<li><b>XP</b>: 1~3주 릴리즈. 5가치=용기·단순성·의사소통·피드백·존중. 실천: 짝 프로그래밍, 공동 코드 소유, 지속적 통합(CI), TDD, 리팩토링</li>
+<li><b>스크럼</b>: 백로그·스프린트(2~4주)·일일 스크럼·PO/스크럼 마스터·번다운 차트</li>
+<li><b>린(Lean)</b>: 도요타 생산방식, 낭비 제거 7원칙</li>
+<li><b>칸반</b>: 작업 흐름 시각화(보드), WIP 제한</li>
+</ul></div>
+
+<h3>객체 지향</h3>
+<div class="mn"><b class="t">[클객 메 메인속]</b> 구성요소 (메메한 인간의 속내) — <b>클</b>래스 / <b>객</b>체 / <b>메</b>서드 / <b>메</b>시지 / <b>인</b>스턴스 / <b>속</b>성</div>
+<table><tr><th>요소</th><th>정의</th></tr>
+<tr><td>클래스</td><td>유사 객체의 공통 특성(속성+메서드)을 묶은 틀·설계도</td></tr>
+<tr><td>객체</td><td>속성(데이터)과 메서드(함수)를 묶은 SW 모듈</td></tr>
+<tr><td>메서드</td><td>객체가 수행하는 연산·동작</td></tr>
+<tr><td>메시지</td><td>객체 간 상호작용 수단(메서드 호출 요청)</td></tr>
+<tr><td>인스턴스</td><td>클래스로부터 실제 생성된 객체</td></tr>
+<tr><td>속성</td><td>객체가 가진 데이터·상태</td></tr></table>
+<div class="mn"><b class="t">[캡상다추정관]</b> 객체 지향 기법 — <b>캡</b>슐화 / <b>상</b>속성 / <b>다</b>형성 / <b>추</b>상화 / <b>정</b>보은닉 / <b>관</b>계성</div>
+<ul>
+<li><b>캡슐화</b>: 속성+메서드를 하나로 묶고 외부 접근 제한 (결합도↓ 응집도↑)</li>
+<li><b>상속성</b>: 상위 클래스 속성·메서드를 하위가 물려받아 재사용</li>
+<li><b>다형성</b>: 하나의 메시지에 객체마다 다른 동작 — 오버로딩(같은 이름·다른 매개변수) / 오버라이딩(상위 메서드 재정의)</li>
+<li><b>추상화</b>: 공통 핵심 성질만 추출해 모델링</li>
+<li><b>정보은닉</b>: 내부 구현 은폐, 인터페이스만 공개 (사이드 이펙트 최소화)</li>
+<li><b>관계성</b>: 객체 간 연관·집합·일반화 관계 표현</li>
+</ul>
+<div class="exam"><mark>오버로딩 vs 오버라이딩</mark> 구분 서술이 단골. 오버로딩 = <b>같은 이름, 다른 매개변수(개수·타입)</b> / 오버라이딩 = <b>상속받은 메서드를 재정의</b>. "다형성"이라는 용어 자체를 쓰게 하는 단답형도 출제.</div>
+<div class="mn"><b class="t">[SOLID]</b> 객체지향 설계 원칙 — <b>S</b>RP 단일 책임 / <b>O</b>CP 개방 폐쇄 / <b>L</b>SP 리스코프 치환 / <b>I</b>SP 인터페이스 분리 / <b>D</b>IP 의존성 역전</div>
+<table><tr><th>원칙</th><th>내용</th></tr>
+<tr><td>SRP</td><td>클래스는 하나의 책임만 가진다</td></tr>
+<tr><td>OCP</td><td>확장에 열려 있고 변경에 닫혀 있어야 한다</td></tr>
+<tr><td>LSP</td><td>하위 클래스는 상위 클래스를 대체 가능해야 한다</td></tr>
+<tr><td>ISP</td><td>사용하지 않는 인터페이스에 의존하지 않는다</td></tr>
+<tr><td>DIP</td><td>구체가 아닌 추상(인터페이스)에 의존한다</td></tr></table>
+<div class="exam">설명을 주고 <mark>영문 약어(SRP·OCP·LSP·ISP·DIP)</mark> 또는 한글 명칭을 쓰게 하는 단답형 최빈출. 특히 <mark>OCP(확장 개방·변경 폐쇄)</mark>와 <mark>ISP</mark>가 자주 출제.</div>
+<div class="box"><div class="boxt">객체 지향 분석 방법론 종류</div>
+<ul>
+<li><b>럼바우(OMT)</b>: 그래픽 표기 모델링 (아래 [객동기])</li>
+<li><b>부치(Booch)</b>: 미시적+거시적 프로세스, 클래스·객체 식별</li>
+<li><b>야콥슨(OOSE)</b>: <b>유스케이스</b> 중심</li>
+<li><b>코드-요돈</b>: E-R 다이어그램 활용</li>
+<li><b>워프스-브록</b>: 분석·설계 구분 없이 연속 수행</li>
+</ul></div>
+<div class="mn"><b class="t">[객동기]</b> 럼바우 분석 절차 (격동기) — <b>객</b>체 모델링(객체 다이어그램) → <b>동</b>적 모델링(상태 다이어그램) → <b>기</b>능 모델링(자료 흐름도 DFD)</div>
+<div class="exam">럼바우는 <mark>순서(객→동→기)</mark>와 <mark>각 단계의 산출 다이어그램 매칭</mark>(객체=객체 다이어그램, 동적=상태 다이어그램, 기능=DFD)이 그대로 답으로 출제됨.</div>
+
+<h3>프로젝트 관리</h3>
+<div class="box"><div class="boxt">비용산정 모형 종류</div>
+<ul>
+<li><b>하향식</b>: 전문가 판단, 델파이 기법</li>
+<li><b>LOC</b>: 예측치 = (낙관치+4×기대치+비관치)÷6</li>
+<li><b>Man Month</b>: 1인 1개월 작업량 기준, 기간=MM÷인원</li>
+<li><b>COCOMO</b>(보헴): 조직형(5만 라인↓)/반분리형(30만↓)/임베디드형(30만↑)</li>
+<li><b>Putnam</b>: Rayleigh-Norden 곡선 기반, 도구=SLIM</li>
+<li><b>FP(기능 점수)</b>: 기능별 가중치 산정, 도구=ESTIMACS</li>
+</ul></div>
+<div class="box"><div class="boxt">일정관리 모델 종류</div>
+<ul>
+<li><b>CPM</b>: 임계 경로(최장 경로)로 최소 소요 기간 산정</li>
+<li><b>PERT</b>: 낙관·기대·비관 3점 추정(신규 프로젝트)</li>
+<li><b>CCPM</b>: 자원 제약 고려 임계 연쇄</li>
+<li><b>간트 차트</b>: 작업 일정 막대 시각화</li>
+</ul></div>
+<div class="mn"><b class="t">[회전완수]</b> 위험 대응 전략 — <b>회</b>피(계획 변경) / <b>전</b>가(제3자 이전·보험) / <b>완</b>화(확률·영향 감소) / <b>수</b>용(수용 후 대비책)</div>
+<div class="exam">COCOMO는 <mark>조직형(5만 라인 이하) / 반분리형(30만 이하) / 임베디드형(30만 초과)</mark> 3유형과 경계값이 단답으로 출제. 위험 대응 4전략은 사례를 주고 <mark>전가(보험·외주)</mark>인지 <mark>완화</mark>인지 고르게 하는 유형.</div>
+
+<h3>소프트웨어 아키텍처</h3>
+<p>시스템 구성요소와 관계·설계 원칙을 정의한 청사진, 이해관계자 소통 도구.</p>
+<div class="mn"><b class="t">[유논프구배]</b> 4+1 뷰 — <b>유</b>스케이스 / <b>논</b>리 / <b>프</b>로세스 / <b>구</b>현 / <b>배</b>포 뷰</div>
+<table><tr><th>뷰</th><th>관점</th><th>내용</th></tr>
+<tr><td>유스케이스(+1)</td><td>사용자</td><td>기능 요구, 나머지 4뷰 검증 중심</td></tr>
+<tr><td>논리</td><td>설계자</td><td>기능 요구·클래스 구조</td></tr>
+<tr><td>프로세스</td><td>개발자</td><td>동시성·성능·스레드</td></tr>
+<tr><td>구현(개발)</td><td>개발자</td><td>모듈·컴포넌트 구성</td></tr>
+<tr><td>배포(물리)</td><td>시스템 엔지니어</td><td>HW에 SW 배치</td></tr></table>
+<div class="box"><div class="boxt">아키텍처 패턴 (계층화·C/S·파이프필터·브로커·MVC)</div>
+<ul>
+<li><b>계층화</b>: 계층 분리(OSI 모델)</li>
+<li><b>클라이언트-서버</b>: 서비스 제공/요청 분리</li>
+<li><b>파이프-필터</b>: 필터 처리→파이프 전달(UNIX 쉘)</li>
+<li><b>브로커</b>: 분산 컴포넌트 통신 중재</li>
+<li><b>MVC</b>: Model(데이터)-View(화면)-Controller(제어)</li>
+</ul></div>
+<div class="mn"><b class="t">[SACAA]</b> 아키텍처 비용 평가 모델 (사카린) — <b>SA</b>AM(변경용이성·최초) / A<b>TA</b>M(품질속성 트레이드오프) / <b>C</b>BAM(경제성) / <b>A</b>DR(응집도) / <b>A</b>RID(ATAM+ADR, 부분 설계)</div>
+
+<h3>디자인 패턴</h3>
+<p>설계 시 반복되는 문제의 <b>재사용 가능한 해결책</b> — GoF 23개 패턴.</p>
+<div class="mn"><b class="t">[패문솔 사결샘]</b> 구성요소 — <b>패</b>턴 이름 / <b>문</b>제 / <b>솔</b>루션 / <b>사</b>례 / <b>결</b>과 / <b>샘</b>플 코드</div>
+<div class="mn"><b class="t">[생구행]</b> 목적별 유형 — <b>생</b>성 / <b>구</b>조 / <b>행</b>위</div>
+<div class="mn"><b class="t">[생빌 프로 팩앱싱]</b> 생성 패턴 — 빌더 / 프로토타입 / 팩토리메서드 / 앱스트랙 팩토리 / 싱글톤</div>
+<table><tr><th>패턴</th><th>핵심</th></tr>
+<tr><td>빌더</td><td>생성 과정과 표현 분리, 단계별 조립</td></tr>
+<tr><td>프로토타입</td><td>원본 복제(clone)로 생성, 생성 비용 클 때</td></tr>
+<tr><td>팩토리 메서드</td><td>생성을 서브클래스에 위임(가상 생성자)</td></tr>
+<tr><td>앱스트랙 팩토리</td><td>관련 객체군(제품군) 생성 인터페이스, 구체 클래스 비의존</td></tr>
+<tr><td>싱글톤</td><td>인스턴스 오직 1개, 전역 접근점</td></tr></table>
+<div class="mn"><b class="t">[구 브데 퍼플 프록 컴 어]</b> 구조 패턴 — 브리지 / 데코레이터 / 퍼사드 / 플라이웨이트 / 프록시 / 컴포지트 / 어댑터</div>
+<table><tr><th>패턴</th><th>핵심</th></tr>
+<tr><td>브리지</td><td>추상-구현 분리, 독립 확장</td></tr>
+<tr><td>데코레이터</td><td>동적으로 기능(장식) 추가</td></tr>
+<tr><td>퍼사드</td><td>복잡한 서브시스템에 단순 통합 창구 제공</td></tr>
+<tr><td>플라이웨이트</td><td>인스턴스 공유로 메모리 절약</td></tr>
+<tr><td>프록시</td><td>대리자를 통한 접근 제어</td></tr>
+<tr><td>컴포지트</td><td>트리 구조로 부분-전체 표현, 단일/복합 동일 취급</td></tr>
+<tr><td>어댑터</td><td>호환 안 되는 인터페이스 변환</td></tr></table>
+<div class="mn"><b class="t">[행 미인이 템옵 스테 비커 스트 메체]</b> 행위 패턴 — 미디에이터 / 인터프리터 / 이터레이터 / 템플릿메서드 / 옵저버 / 스테이트 / 비지터 / 커맨드 / 스트레티지 / 메멘토 / 체인 오브 리스판서빌리티</div>
+<table><tr><th>패턴</th><th>핵심</th></tr>
+<tr><td>미디에이터</td><td>객체 간 통신을 중재자가 캡슐화(M:N→M:1)</td></tr>
+<tr><td>인터프리터</td><td>언어 문법 정의·해석기</td></tr>
+<tr><td>이터레이터</td><td>내부 노출 없이 요소 순차 접근</td></tr>
+<tr><td>템플릿 메서드</td><td>골격은 상위, 세부는 하위 클래스</td></tr>
+<tr><td>옵저버</td><td>상태 변화를 의존 객체에 자동 통보(1:N)</td></tr>
+<tr><td>스테이트</td><td>상태에 따라 행위 변경(상태 객체화)</td></tr>
+<tr><td>비지터</td><td>구조와 연산 분리, 연산 추가 용이</td></tr>
+<tr><td>커맨드</td><td>요청을 객체로 캡슐화(undo·큐)</td></tr>
+<tr><td>스트레티지</td><td>알고리즘군 캡슐화·동적 교체</td></tr>
+<tr><td>메멘토</td><td>상태 저장 후 복원(undo)</td></tr>
+<tr><td>체인 오브 리스판서빌리티</td><td>처리 가능한 객체까지 요청을 사슬로 전달</td></tr></table>
+<div class="exam">디자인 패턴은 <mark>설명을 주고 패턴 이름을 영문/한글로 쓰는 형태</mark>가 매회 출제 수준. 최빈출: <mark>싱글톤</mark>(인스턴스 1개), <mark>옵저버</mark>(상태 변화 자동 통보), <mark>팩토리 메서드</mark>(생성을 서브클래스에 위임), <mark>어댑터</mark>(인터페이스 변환), <mark>데코레이터</mark>(동적 기능 추가), <mark>프록시</mark>(대리자), <mark>스트레티지</mark>(알고리즘 교체), <mark>브리지</mark>(추상-구현 분리). 각 패턴이 생/구/행 중 어디 소속인지도 함께 확인.</div>
+
+<h3>요구사항</h3>
+<ul>
+<li><b>기능적 요구사항</b>: 시스템이 제공할 기능·서비스</li>
+<li><b>비기능적 요구사항</b>: 품질·제약(성능·보안·신뢰성·사용성 등)</li>
+</ul>
+<div class="mn"><b class="t">[도분명확]</b> 요구공학 프로세스 — <b>도</b>출 → <b>분</b>석 → <b>명</b>세 → <b>확</b>인 및 검증</div>
+<div class="steps">
+<div class="s"><b>① 도출</b><small>인터뷰 · 워크숍<br>브레인스토밍 · 유스케이스</small></div><div class="a">→</div>
+<div class="s"><b>② 분석</b><small>상충 해결<br>우선순위 · 타당성</small></div><div class="a">→</div>
+<div class="s"><b>③ 명세</b><small>SRS 문서화<br>정형 / 비정형</small></div><div class="a">→</div>
+<div class="s"><b>④ 확인·검증</b><small>동료검토 · 워크스루<br>인스펙션</small></div>
+</div>
+<div class="box"><div class="boxt">검토 기법 3종</div>
+<ul><li><b>동료 검토</b>: 작성자 설명 + 동료가 결함 발견</li>
+<li><b>워크스루</b>: 사전 배포 후 짧은 검토 회의</li>
+<li><b>인스펙션</b>: 전문가가 공식적으로 결함 검출</li></ul>
+<div class="exam">요구공학 4단계(<mark>도출→분석→명세→확인</mark>) 순서 쓰기와 <mark>워크스루/인스펙션 구분</mark>(비공식 검토 vs 공식 검토)이 출제 포인트.</div></div>
+<div class="box"><div class="boxt">현행 시스템 분석</div>
+<p>현행 플랫폼 기능·구조, OS, 네트워크, DBMS, 비즈니스 융합을 파악해 개발 범위·방향 결정. DBMS 분석 고려사항: 가용성·성능·상호 호환성·기술 지원·구축 비용.</p></div>
+
+<!-- ================= 2과목 ================= -->
+<h2 id="s2">2과목. 화면 설계</h2>
+
+<h3>UI / UX</h3>
+<ul><li><b>UI</b>: 사용자-시스템 상호작용 접점</li><li><b>UX</b>: 사용하며 느끼는 총체적·주관적 경험</li></ul>
+<div class="mn"><b class="t">[CG NO]</b> UI 유형 — <b>C</b>LI(명령줄) / <b>G</b>UI(그래픽) / <b>N</b>UI(음성·터치·제스처) / <b>O</b>UI(사물 자체가 입출력)</div>
+<div class="mn"><b class="t">[직유 학유]</b> UI 설계 원칙 — <b>직</b>관성(쉽게 이해) / <b>유</b>효성(목적 달성) / <b>학</b>습성(쉽게 배움) / <b>유</b>연성(요구 수용·오류 최소화)</div>
+<div class="exam">UI 설계 원칙 4가지는 <mark>명칭+의미 매칭</mark> 단답 단골 — 특히 <mark>직관성</mark>과 <mark>유효성</mark> 정의를 정확히. NUI(음성·터치·제스처) 용어 쓰기도 출제된 적 있음.</div>
+<div class="mn"><b class="t">[기신사효유이]</b> UI 품질 요구사항(ISO 9126) — <b>기</b>능성 / <b>신</b>뢰성 / <b>사</b>용성 / <b>효</b>율성 / <b>유</b>지보수성 / <b>이</b>식성</div>
+<table><tr><th>품질</th><th>부특성</th></tr>
+<tr><td>기능성</td><td>적절성·정확성·상호운용성·보안성·준수성</td></tr>
+<tr><td>신뢰성</td><td>성숙성·고장 허용성·회복성</td></tr>
+<tr><td>사용성</td><td>이해성·학습성·운용성</td></tr>
+<tr><td>효율성</td><td>시간·자원 효율성</td></tr>
+<tr><td>유지보수성</td><td>분석성·변경성·안정성·시험성</td></tr>
+<tr><td>이식성</td><td>적응성·설치성·대체성</td></tr></table>
+<div class="mn"><b class="t">[와스프목]</b> UI 화면 설계 도구 — <b>와</b>이어프레임(뼈대) / <b>스</b>토리보드(뼈대+설명·흐름, 최종 산출물) / <b>프</b>로토타입(동적 시제품) / <b>목</b>업(정적 모형)</div>
+
+<h3>UML</h3>
+<p>객체지향 산출물을 명세화·시각화·문서화하는 <b>표준 모델링 언어</b>(부치+럼바우+야콥슨 통합, OMG 표준).</p>
+<div class="mn"><b class="t">[가구명문]</b> UML 특징 — <b>가</b>시화 / <b>구</b>축 / <b>명</b>세화 / <b>문</b>서화 언어</div>
+<div class="mn"><b class="t">[사관다]</b> UML 구성요소 — <b>사</b>물 / <b>관</b>계 / <b>다</b>이어그램</div>
+<h3>클래스 간의 관계</h3>
+<table><tr><th>관계</th><th>표기</th><th>의미·예</th></tr>
+<tr><td>연관(Association)</td><td>실선</td><td>객체 간 참조. 사람—회사</td></tr>
+<tr><td>집합(Aggregation)</td><td>빈 마름모</td><td>전체-부분, 부분 독립. 컴퓨터—프린터</td></tr>
+<tr><td>합성(Composition)</td><td>채운 마름모</td><td>전체-부분, 생명주기 공유. 문—문손잡이</td></tr>
+<tr><td>일반화(Generalization)</td><td>빈 삼각형 실선</td><td>상속(is-a). 커피—아메리카노</td></tr>
+<tr><td>의존(Dependency)</td><td>점선 화살표</td><td>짧은 시간 참조</td></tr>
+<tr><td>실체화(Realization)</td><td>점선+빈 삼각형</td><td>인터페이스-구현</td></tr></table>
+<div class="exam"><mark>집합(부분이 독립) vs 합성(생명주기 공유)</mark> 구분과, 사례를 주고 관계 이름을 쓰게 하는 문제가 빈출. 유스케이스의 <mark>include(포함, 필수) vs extend(확장, 선택)</mark>도 함께 출제됨.</div>
+<div class="mn"><b class="t">[클객 컴배 복패]</b> 구조적(정적) 다이어그램 — <b>클</b>래스 / <b>객</b>체 / <b>컴</b>포넌트 / <b>배</b>치 / <b>복</b>합체 구조 / <b>패</b>키지</div>
+<div class="mn"><b class="t">[유시커 상활타]</b> 행위적(동적) 다이어그램 — <b>유</b>스케이스 / <b>시</b>퀀스 / <b>커</b>뮤니케이션 / <b>상</b>태 / <b>활</b>동 / <b>타</b>이밍</div>
+<table><tr><th>다이어그램</th><th>핵심</th></tr>
+<tr><td>클래스</td><td>속성·연산·클래스 관계(정적 핵심)</td></tr>
+<tr><td>객체</td><td>특정 시점 인스턴스(럼바우 객체 모델링)</td></tr>
+<tr><td>컴포넌트/배치</td><td>구현 단계 — 컴포넌트 의존 / 물리 노드 배치</td></tr>
+<tr><td>패키지</td><td>요소를 패키지로 그룹화, 의존 관계</td></tr>
+<tr><td>유스케이스</td><td>액터-기능 관계. include(포함)/extend(확장)/일반화</td></tr>
+<tr><td>시퀀스</td><td>객체 간 메시지를 <b>시간 순서</b>로. 액터·객체·생명선·실행박스·메시지</td></tr>
+<tr><td>커뮤니케이션</td><td>메시지+객체 간 연관까지</td></tr>
+<tr><td>상태</td><td>이벤트에 따른 상태 변화(럼바우 <b>동적</b> 모델링)</td></tr>
+<tr><td>활동</td><td>처리 흐름·조건 분기(순서도 유사)</td></tr>
+<tr><td>타이밍</td><td>시간 제약 명시</td></tr></table>
+<div class="exam">다이어그램을 <mark>정적/동적으로 분류</mark>하는 문제와 <mark>시퀀스 다이어그램 구성요소 5가지</mark>(액터·객체·생명선·실행박스·메시지) 쓰기가 기출. "시간 순서로 메시지 표현" = 시퀀스, "상태 변화" = 상태 다이어그램으로 키워드 매칭.</div>
+
+<!-- ================= 3과목 ================= -->
+<h2 id="s3">3과목. 데이터 입출력 구현</h2>
+
+<h3>데이터 모델</h3>
+<p>현실 세계 정보를 컴퓨터 세계로 추상화하는 과정·표현.</p>
+<div class="mn"><b class="t">[구연제]</b> 데이터 모델 표시 요소 — <b>구</b>조 / <b>연</b>산 / <b>제</b>약조건</div>
+<div class="mn"><b class="t">[요개논물]</b> DB 설계 단계 — <b>요</b>구조건 분석 → <b>개</b>념적 설계(E-R, DBMS 독립) → <b>논</b>리적 설계(테이블·정규화) → <b>물</b>리적 설계(저장구조·인덱스·반정규화)</div>
+<div class="steps">
+<div class="s"><b>① 요구조건 분석</b><small>요구 수집<br>명세서 작성</small></div><div class="a">→</div>
+<div class="s"><b>② 개념적 설계</b><small>E-R 다이어그램<br>DBMS 독립</small></div><div class="a">→</div>
+<div class="s"><b>③ 논리적 설계</b><small>테이블 스키마<br>정규화</small></div><div class="a">→</div>
+<div class="s"><b>④ 물리적 설계</b><small>저장구조 · 인덱스<br>반정규화</small></div>
+</div>
+<div class="box"><div class="boxt">논리 데이터 모델 종류 · 관계 모델 용어</div>
+<ul><li><b>관계</b>(테이블) / <b>계층</b>(트리 1:N) / <b>네트워크</b>(그래프 N:M)</li>
+<li>릴레이션=테이블, 튜플=행(개수=카디널리티), 속성=열(개수=차수), 도메인=속성 값 범위</li></ul></div>
+
+<h3>관계 대수 · 관계 해석</h3>
+<div class="mn"><b class="t">[대절해비]</b> 관계 <b>대</b>수 = <b>절</b>차적 언어(How) / 관계 <b>해</b>석 = <b>비</b>절차적 언어(What, 술어 해석 기반)</div>
+<div class="mn"><b class="t">[합교차카]</b> 일반 집합 연산자 — <b>합</b>집합(∪) / <b>교</b>집합(∩) / <b>차</b>집합(−) / <b>카</b>티션 프로덕트(×)</div>
+<div class="mn"><b class="t">[셀프조디]</b> 순수 관계 연산자 — <b>셀</b>렉트 σ(행 추출) / <b>프</b>로젝트 π(열 추출) / <b>조</b>인 ⋈(공통 속성 결합) / <b>디</b>비전 ÷</div>
+<div class="exam">연산자 <mark>기호(σ, π, ⋈, ÷)와 이름·기능 매칭</mark>이 매회 출제 수준. <mark>σ=행(튜플), π=열(속성)</mark> 혼동 주의. "관계대수=절차적, 관계해석=비절차적" 구분도 단답 단골.</div>
+
+<h3>E-R 모델</h3>
+<p>개체·속성·관계로 현실을 개념적으로 표현(피터 첸).</p>
+<table><tr><th>기호</th><th>의미</th></tr>
+<tr><td>사각형</td><td>개체(Entity)</td></tr>
+<tr><td>마름모</td><td>관계(Relationship)</td></tr>
+<tr><td>타원</td><td>속성(Attribute)</td></tr>
+<tr><td>이중 타원</td><td>다중값 속성</td></tr>
+<tr><td>밑줄 타원</td><td>기본키 속성</td></tr>
+<tr><td>선</td><td>개체-속성/관계 연결</td></tr></table>
+
+<h3>이상 현상 · 함수 종속 · 정규화</h3>
+<div class="mn"><b class="t">[삽삭갱]</b> 이상 현상 — <b>삽</b>입 이상(불필요한 값 동반 삽입) / <b>삭</b>제 이상(연쇄 삭제) / <b>갱</b>신 이상(일부만 갱신→불일치)</div>
+<div class="box"><div class="boxt">함수 종속 (완전·부분·이행)</div>
+<p>X→Y: X(결정자)가 Y(종속자)를 결정. <b>완전</b>=기본키 전체에 종속 / <b>부분</b>=복합키 일부에만 종속 / <b>이행</b>=X→Y, Y→Z ⇒ X→Z</p></div>
+<p><b>정규화</b>: 이상 현상 제거를 위해 릴레이션을 무손실 분해(중복 최소화·종속성 제거). <b>반정규화</b>: 성능·운영 단순화를 위한 의도적 중복·통합(일관성 저하 위험).</p>
+<div class="mn"><b class="t">[원부이 결다조]</b> 정규화 단계 — 1NF <b>원</b>자화 → 2NF <b>부</b>분함수종속 제거 → 3NF <b>이</b>행함수종속 제거 → BCNF <b>결</b>정자가 후보키 → 4NF <b>다</b>치종속 제거 → 5NF <b>조</b>인종속 제거</div>
+<div class="exam">3과목 최중요. <mark>"○○ 종속을 제거하면 몇 정규형?"</mark> 유형이 매회 출제 수준 — 특히 <mark>2NF(부분)·3NF(이행)·BCNF(결정자가 후보키)</mark>. 이상 현상 3종(삽삭갱)의 명칭·정의 서술, <mark>카디널리티=튜플 수 / 차수(Degree)=속성 수</mark>도 단답 단골.</div>
+
+<h3>무결성 · 키</h3>
+<div class="mn"><b class="t">[개참속사키]</b> 무결성 종류 — <b>개</b>체(PK는 NULL·중복 불가) / <b>참</b>조(FK는 NULL 또는 참조 PK 값) / <b>속</b>성(타입·도메인 준수) / <b>사</b>용자(비즈니스 규칙) / <b>키</b>(같은 키 값 튜플 불허)</div>
+<table><tr><th>키</th><th>유일성</th><th>최소성</th><th>비고</th></tr>
+<tr><td>슈퍼키</td><td>O</td><td>X</td><td></td></tr>
+<tr><td>후보키</td><td>O</td><td>O</td><td></td></tr>
+<tr><td>기본키</td><td>O</td><td>O</td><td>후보키 중 선정, NULL 불가</td></tr>
+<tr><td>대체키</td><td>O</td><td>O</td><td>기본키 외 후보키</td></tr>
+<tr><td>외래키</td><td colspan="3">다른 릴레이션의 기본키 참조</td></tr></table>
+<div class="exam"><mark>개체 무결성(PK는 NULL·중복 불가)</mark>과 <mark>참조 무결성(FK는 NULL 또는 참조 PK 값)</mark> 정의 서술이 빈출. 키는 <mark>후보키=유일성+최소성, 슈퍼키=유일성만</mark> 구분이 핵심.</div>
+<div class="mn"><b class="t">[레해리컴라]</b> 파티셔닝 유형 — <b>Ra</b>nge(범위) / <b>Ha</b>sh(해시 균등) / <b>Li</b>st(값 목록) / <b>Com</b>posite(조합) / <b>R</b>ound-<b>R</b>obin(순차 분배)</div>
+
+<h3>데이터베이스 기초 활용</h3>
+<div class="box"><div class="boxt">빅데이터 · 하둡 · NoSQL · 데이터 마이닝</div>
+<ul>
+<li><b>빅데이터 3V</b>: Volume·Velocity·Variety</li>
+<li><b>하둡</b>: 분산 처리 오픈소스 프레임워크 = HDFS(분산 파일 시스템)+MapReduce</li>
+<li><b>DBMS 필수 기능</b>: 정의·조작·제어</li>
+</ul></div>
+<div class="mn"><b class="t">[키컬도그]</b> NoSQL 유형 (Key Color Dog) — <b>Key-Value</b>(Redis) / <b>Column Family</b>(HBase·Cassandra) / <b>Document</b>(MongoDB) / <b>Graph</b>(Neo4j). 특징: BASE, 수평 확장</div>
+<div class="mn"><b class="t">[분연 연데]</b> 데이터 마이닝 기법 — <b>분</b>류 규칙 / <b>연</b>관 규칙(장바구니) / <b>연</b>속 규칙(시간 순서) / <b>데</b>이터 군집화(비지도)</div>
+
+<!-- ================= 4과목 ================= -->
+<h2 id="s4">4과목. 통합 구현</h2>
+
+<h3>연계 메커니즘</h3>
+<p><b>송신 시스템 → 중계 시스템 → 수신 시스템</b>. 직접 연계(DB Link·API·JDBC — 빠르지만 결합도↑) vs 간접 연계(EAI·ESB·웹서비스·소켓 — 유연하지만 성능↓).</p>
+<div class="box"><div class="boxt">주요 용어</div>
+<ul>
+<li><b>커넥션 풀</b>: DB 연결을 미리 만들어 재사용 → 연결 생성 비용 절감</li>
+<li><b>JDBC</b>: Java의 DB 접속 표준 API</li>
+<li><b>소켓</b>: 네트워크 통신 끝점, 포트 할당으로 클라이언트 연결 처리</li>
+<li><b>API</b>: 기능·데이터 접근 인터페이스</li>
+</ul></div>
+
+<h3>EAI / ESB</h3>
+<p><b>EAI</b>: 기업 내 이기종 애플리케이션 간 정보 전달·연계·통합 솔루션.</p>
+<div class="mn"><b class="t">[포허 메하]</b> EAI 구축 유형 — <b>포</b>인트 투 포인트 / <b>허</b>브 앤 스포크 / <b>메</b>시지 버스 / <b>하</b>이브리드</div>
+<table><tr><th>유형</th><th>특징</th></tr>
+<tr><td>Point-to-Point</td><td>1:1 직접 연결, 단순·저렴, 시스템 증가 시 연결 폭증</td></tr>
+<tr><td>Hub &amp; Spoke</td><td>중앙 허브 경유, 확장 용이, 허브 장애 시 전체 영향</td></tr>
+<tr><td>Message Bus(ESB)</td><td>미들웨어(버스) 연계, 뛰어난 확장성·대용량</td></tr>
+<tr><td>Hybrid</td><td>그룹 내 허브앤스포크 + 그룹 간 메시지 버스</td></tr></table>
+<div class="exam">EAI는 <mark>유형 설명 → 이름 쓰기</mark>가 기출 패턴. "중앙 허브 장애 시 전체 영향" = <mark>허브 앤 스포크</mark>, "미들웨어(버스) 활용·확장성 우수" = <mark>메시지 버스</mark>로 키워드 매칭. ESB의 <mark>느슨한 결합(Loosely Coupled)</mark> 용어도 출제.</div>
+<p><b>ESB</b>: 서비스 중심·버스 기반으로 <b>느슨한 결합(Loosely Coupled)</b> 통합 미들웨어. 표준(웹서비스) 지향.</p>
+
+<h3>웹 서비스</h3>
+<p>이기종 간 XML·HTTP 표준 기반 정보 교환 서비스.</p>
+<pre class="mermaid pre-mermaid">sequenceDiagram
+  participant P as 서비스 제공자
+  participant U as UDDI(레지스트리)
+  participant C as 서비스 사용자
+  P->>U: WSDL 등록
+  C->>U: 서비스 검색
+  U-->>C: WSDL 반환
+  C->>P: SOAP 메시지 호출</pre>
+<table><tr><th>용어</th><th>정의</th></tr>
+<tr><td><b>SOAP</b></td><td>XML 기반 메시지 교환 프로토콜(Envelope-Header-Body)</td></tr>
+<tr><td><b>WSDL</b></td><td>웹 서비스 명세(기능·위치·호출법) 기술 XML 문서</td></tr>
+<tr><td><b>UDDI</b></td><td>웹 서비스 등록·검색 레지스트리</td></tr></table>
+<div class="exam"><mark>SOAP(통신 프로토콜) / WSDL(서비스 명세) / UDDI(등록·검색 저장소)</mark> 3개 역할 구분이 기출 단골 — 설명을 주고 영문 약어를 쓰는 형태로 출제.</div>
+<div class="box"><div class="boxt">IPC · LOD · URI</div>
+<ul>
+<li><b>IPC 방식</b>: 공유 메모리, 소켓, 세마포어, 파이프, 메시지 큐</li>
+<li><b>LOD</b>: URI로 식별·공개·연결한 개방 데이터(Linked Open Data)</li>
+<li><b>URL/URI</b>: 자원 위치 / 자원 식별자</li>
+</ul></div>
+
+<!-- ================= 5과목 ================= -->
+<h2 id="s5">5과목. 인터페이스 구현</h2>
+
+<table><tr><th>기술</th><th>정의</th></tr>
+<tr><td><b>JSON</b></td><td>속성-값 쌍의 경량 데이터 교환 포맷. 언어 독립. <code>{"name":"홍길동"}</code>. 배열 <code>[]</code>=선형 구조, 객체 <code>{}</code>=키-값</td></tr>
+<tr><td><b>XML</b></td><td>HTML 한계·SGML 복잡성을 해결한 확장 가능 <b>마크업 언어</b>(사용자 정의 태그)</td></tr>
+<tr><td><b>AJAX</b></td><td>자바스크립트 <b>비동기</b> 통신 — 페이지 전체 새로고침 없이 일부 갱신(XMLHttpRequest)</td></tr>
+<tr><td><b>REST</b></td><td>자원(URI)+행위(HTTP Method: GET/POST/PUT/DELETE)+표현(JSON·XML). 준수 시 RESTful</td></tr>
+<tr><td><b>DOM</b></td><td>XML/HTML을 트리 객체로 접근·조작(전체 메모리 로딩) ↔ SAX(이벤트 기반 순차 파싱)</td></tr>
+<tr><td><b>XSLT</b></td><td>XML을 다른 XML/HTML로 <b>변환</b>하는 언어</td></tr>
+<tr><td><b>HTML/CSS</b></td><td>웹 문서 구조 마크업 / 표현(스타일) 정의</td></tr></table>
+<div class="exam">5과목은 <mark>용어 정의 → 영문 명칭 쓰기</mark>가 핵심. <mark>JSON</mark>(속성-값 쌍 경량 포맷), <mark>AJAX</mark>(비동기·일부만 갱신), <mark>REST</mark>(자원 URI + HTTP 메서드) 정의는 통째로 암기. REST 구성 3요소 <mark>자원/행위/표현</mark>도 출제됨.</div>
+<div class="box"><div class="boxt">참고: 인터페이스 검증 도구·보안</div>
+<ul><li>검증 도구: xUnit, STAF, FitNesse, NTAF, Selenium, watir</li>
+<li>전송 암호화: IPSec(IP 계층) / SSL·TLS(전송 계층) / S-HTTP(응용 계층)</li></ul></div>
+
+<!-- ================= 총정리 ================= -->
+<h2 id="recap">암기 키워드 총정리</h2>
+<table>
+<tr><th>키워드</th><th>내용</th></tr>
+<tr><td>폭프나반</td><td>생명주기: 폭포수/프로토타이핑/나선형/반복적</td></tr>
+<tr><td>계위개고</td><td>나선형: 계획·정의→위험분석→개발→고객평가</td></tr>
+<tr><td>클객 메 메인속</td><td>객체지향 구성: 클래스/객체/메서드/메시지/인스턴스/속성</td></tr>
+<tr><td>캡상다추정관</td><td>객체지향 기법: 캡슐화/상속/다형성/추상화/정보은닉/관계성</td></tr>
+<tr><td>SOLID</td><td>SRP/OCP/LSP/ISP/DIP</td></tr>
+<tr><td>객동기(격동기)</td><td>럼바우: 객체→동적→기능</td></tr>
+<tr><td>회전완수</td><td>위험 대응: 회피/전가/완화/수용</td></tr>
+<tr><td>유논프구배</td><td>4+1뷰: 유스케이스/논리/프로세스/구현/배포</td></tr>
+<tr><td>SACAA(사카린)</td><td>SAAM/ATAM/CBAM/ADR/ARID</td></tr>
+<tr><td>패문솔 사결샘</td><td>패턴 구성: 이름/문제/솔루션/사례/결과/샘플코드</td></tr>
+<tr><td>생구행</td><td>패턴 유형: 생성/구조/행위</td></tr>
+<tr><td>생빌 프로 팩앱싱</td><td>생성: 빌더/프로토타입/팩토리메서드/앱스트랙팩토리/싱글톤</td></tr>
+<tr><td>구 브데 퍼플 프록 컴 어</td><td>구조: 브리지/데코레이터/퍼사드/플라이웨이트/프록시/컴포지트/어댑터</td></tr>
+<tr><td>행 미인이 템옵 스테 비커 스트 메체</td><td>행위: 미디에이터/인터프리터/이터레이터/템플릿메서드/옵저버/스테이트/비지터/커맨드/스트레티지/메멘토/체인오브리스판서빌리티</td></tr>
+<tr><td>도분명확</td><td>요구공학: 도출/분석/명세/확인·검증</td></tr>
+<tr><td>CG NO</td><td>UI 유형: CLI/GUI/NUI/OUI</td></tr>
+<tr><td>직유 학유</td><td>UI 원칙: 직관성/유효성/학습성/유연성</td></tr>
+<tr><td>기신사효유이</td><td>UI 품질: 기능/신뢰/사용/효율/유지보수/이식성</td></tr>
+<tr><td>와스프목</td><td>설계 도구: 와이어프레임/스토리보드/프로토타입/목업</td></tr>
+<tr><td>가구명문</td><td>UML 특징: 가시화/구축/명세화/문서화</td></tr>
+<tr><td>사관다</td><td>UML 구성: 사물/관계/다이어그램</td></tr>
+<tr><td>클객 컴배 복패</td><td>정적: 클래스/객체/컴포넌트/배치/복합체구조/패키지</td></tr>
+<tr><td>유시커 상활타</td><td>동적: 유스케이스/시퀀스/커뮤니케이션/상태/활동/타이밍</td></tr>
+<tr><td>구연제</td><td>데이터모델 요소: 구조/연산/제약조건</td></tr>
+<tr><td>요개논물</td><td>DB 설계: 요구분석/개념적/논리적/물리적</td></tr>
+<tr><td>합교차카</td><td>일반집합: 합/교/차/카티션프로덕트</td></tr>
+<tr><td>셀프조디</td><td>순수관계: 셀렉트/프로젝트/조인/디비전</td></tr>
+<tr><td>대절해비</td><td>관계대수=절차적 / 관계해석=비절차적</td></tr>
+<tr><td>삽삭갱</td><td>이상현상: 삽입/삭제/갱신</td></tr>
+<tr><td>원부이 결다조</td><td>정규화: 1NF원자화/2NF부분/3NF이행/BCNF결정자/4NF다치/5NF조인</td></tr>
+<tr><td>개참속사키</td><td>무결성: 개체/참조/속성/사용자/키</td></tr>
+<tr><td>레해리컴라</td><td>파티셔닝: Range/Hash/List/Composite/Round-Robin</td></tr>
+<tr><td>키컬도그</td><td>NoSQL: Key-Value/Column/Document/Graph</td></tr>
+<tr><td>분연 연데</td><td>마이닝: 분류/연관/연속/군집화</td></tr>
+<tr><td>포허 메하</td><td>EAI: 포인트투포인트/허브앤스포크/메시지버스/하이브리드</td></tr>
+</table>
+
+<h2 id="quiz">자가 점검 질문</h2>
+<div class="quiz">
+<ol>
+<li>나선형 모델의 4단계 절차와 폭포수 모델 대비 가장 큰 차별점은? <i>(계위개고 · 위험 분석)</i></li>
+<li>오버로딩과 오버라이딩의 차이를 다형성 관점에서 설명하라.</li>
+<li>OCP와 DIP를 각각 한 문장으로 정의하라.</li>
+<li>싱글톤·퍼사드·옵저버 패턴은 각각 생/구/행 중 어디에 속하는가?</li>
+<li>4+1 뷰에서 '+1'에 해당하는 뷰와 그 역할은?</li>
+<li>시퀀스 다이어그램의 구성요소 5가지는?</li>
+<li>2NF와 3NF에서 각각 제거하는 함수 종속은?</li>
+<li>개체 무결성과 참조 무결성의 차이는?</li>
+<li>EAI 허브 앤 스포크의 장점과 단점은?</li>
+<li>SOAP/WSDL/UDDI의 역할을 웹 서비스 동작 순서로 설명하라.</li>
+<li>AJAX가 페이지 전체를 새로고침하지 않아도 되는 이유는?</li>
+<li>REST의 구성 3요소는?</li>
+</ol></div>
+
+<footer>정보처리기사 실기 대비 개념요약 · 사용 라이브러리: Mermaid v11 (도식) · 인쇄/PDF 저장 지원</footer>
+</div>
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
+  primaryColor:"#f3e8e2", primaryBorderColor:"#c96442", primaryTextColor:"#1a1915",
+  actorBkg:"#f3e8e2", actorBorder:"#c96442", actorTextColor:"#1a1915",
+  signalColor:"#6e6a5e", signalTextColor:"#1a1915",
+  fontFamily:"Noto Sans KR, sans-serif", fontSize:"14px"
+}});
+</script>
+</body></html>

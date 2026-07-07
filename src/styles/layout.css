@@ -1,0 +1,76 @@
+.app-shell {
+  min-height: 100dvh;
+  background: var(--surface);
+  color: var(--text);
+}
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--outline);
+  background: var(--sidebar);
+  padding: 24px 14px 72px;
+  z-index: 10;
+}
+.main-pane {
+  margin-left: 260px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--outline);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0 24px;
+}
+.topbar strong {
+  font-size: 20px;
+}
+.topbar nav {
+  display: flex;
+  gap: 8px;
+}
+.topbar input {
+  width: 240px;
+  border: 1px solid var(--outline);
+  background: var(--input-bg);
+  color: var(--text);
+  border-radius: var(--radius-control);
+  padding: 9px 12px;
+}
+.progress-strip {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--outline);
+  background: var(--strip);
+  color: var(--text);
+  padding: 14px 24px;
+}
+.content-scroll {
+  flex: 1;
+  overflow: auto;
+  background: var(--surface);
+  padding: 0 24px 220px;
+}
+.answer-footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 260px;
+  background: var(--strip);
+  border-top: 1px solid var(--outline);
+  color: var(--text);
+  z-index: 8;
+}
