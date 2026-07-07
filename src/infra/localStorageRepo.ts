@@ -10,6 +10,7 @@ export function createLocalStorageRepository(
 ): Repository {
   return {
     load: () => loadLibrary(storage),
+    saveLibrary: (state) => persist(storage, state),
     saveFolders: (folders) =>
       persist(storage, { ...loadLibrary(storage), folders }),
     saveFiles: (files) => persist(storage, { ...loadLibrary(storage), files }),

@@ -29,18 +29,20 @@ describe("Folder aggregate questions", () => {
 
     await user.upload(screen.getByLabelText("md/txt 불러오기"), first);
     await user.upload(screen.getByLabelText("md/txt 불러오기"), second);
-    await user.click(screen.getByRole("button", { name: "기본 폴더" }));
-    expect(screen.queryByText("Folder · 기본 폴더")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "doc" }));
+    expect(screen.queryByText("Folder · doc")).not.toBeInTheDocument();
 
-    expect(screen.getByText("QUESTION 1 / 4")).toBeInTheDocument();
+    expect(screen.getByText("QUESTION 1 / 211")).toBeInTheDocument();
     expect(document.querySelector(".question-prompt")).toHaveTextContent(
-      "첫 파일 1",
+      "정보처리기사 실기",
     );
     expect(document.querySelector(".question-prompt")).not.toHaveTextContent(
       "one.md",
     );
     expect(
-      screen.getByText("기본 폴더 - one.md · QUESTION 1 / 4"),
+      screen.getByText(
+        "doc - 정보처리기사_실기_개념요약본.md · QUESTION 1 / 211",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.queryByText("진행도 (Test Progress)"),
@@ -50,9 +52,9 @@ describe("Folder aggregate questions", () => {
     await user.click(screen.getByRole("button", { name: "순차" }));
 
     expect(screen.getByRole("button", { name: "무작위" })).toBeInTheDocument();
-    expect(screen.getByText("QUESTION 1 / 4")).toBeInTheDocument();
+    expect(screen.getByText("QUESTION 1 / 211")).toBeInTheDocument();
     expect(document.querySelector(".question-prompt")).not.toHaveTextContent(
-      "첫 파일 1",
+      "정보처리기사 실기",
     );
     const firstShufflePrompt =
       document.querySelector(".question-prompt")?.textContent ?? "";
@@ -60,9 +62,9 @@ describe("Folder aggregate questions", () => {
     await user.click(screen.getByRole("button", { name: "무작위" }));
 
     expect(screen.getByRole("button", { name: "순차" })).toBeInTheDocument();
-    expect(screen.getByText("QUESTION 1 / 4")).toBeInTheDocument();
+    expect(screen.getByText("QUESTION 1 / 211")).toBeInTheDocument();
     expect(document.querySelector(".question-prompt")).toHaveTextContent(
-      "첫 파일 1",
+      "정보처리기사 실기",
     );
 
     await user.click(screen.getByRole("button", { name: "순차" }));
@@ -78,7 +80,7 @@ describe("Folder aggregate questions", () => {
     expect(screen.getByRole("button", { name: "무작위" })).toBeInTheDocument();
     expect(screen.getByText("00:00:00")).toBeInTheDocument();
     expect(
-      screen.getByText(/기본 폴더 - .*\.md · QUESTION 1 \/ 4/),
+      screen.getByText(/doc - .*\.md · QUESTION 1 \/ 211/),
     ).toBeInTheDocument();
   });
 });

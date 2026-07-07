@@ -9,6 +9,7 @@ import type {
 
 export type Repository = {
   readonly load: () => LibraryState;
+  readonly saveLibrary: (state: LibraryState) => void;
   readonly saveFolders: (folders: readonly Folder[]) => void;
   readonly saveFiles: (files: readonly StudyFile[]) => void;
   readonly saveAttempts: (attempts: readonly Attempt[]) => void;

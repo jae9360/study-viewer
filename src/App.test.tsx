@@ -15,7 +15,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "샘플 시작" }));
+    await uploadSampleMarkdown(user);
     expect(screen.getByText("Question 01")).toBeInTheDocument();
     expect(
       screen.queryByText("진행도 (Test Progress)"),
@@ -65,7 +65,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "샘플 시작" }));
+    await uploadSampleMarkdown(user);
     await user.click(screen.getByRole("button", { name: "시험보기" }));
 
     expect(screen.getByText("진행도 (Test Progress)")).toBeInTheDocument();
@@ -97,6 +97,7 @@ describe("App", () => {
     const { unmount } = render(<App />);
 
     await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
+    await user.click(screen.getByRole("button", { name: /answer\.md/ }));
     await user.click(screen.getByRole("button", { name: "정답 보기" }));
     expect(
       screen.getByRole("button", { name: "정답: 106.00" }),
@@ -119,6 +120,7 @@ describe("App", () => {
     unmount();
     render(<App />);
 
+    await user.click(screen.getByRole("button", { name: /answer\.md/ }));
     await user.click(screen.getByRole("button", { name: "정답 보기" }));
     expect(
       screen.getByRole("button", { name: "정답: 107" }),
@@ -138,7 +140,7 @@ describe("App", () => {
     const user = userEvent.setup();
     const { unmount } = render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "샘플 시작" }));
+    await uploadSampleMarkdown(user);
     await user.click(screen.getByRole("button", { name: "시험보기" }));
     await user.type(screen.getByPlaceholderText("답을 입력하세요"), "md");
     await user.click(screen.getByRole("button", { name: "저장" }));
@@ -151,6 +153,7 @@ describe("App", () => {
     unmount();
     const secondRender = render(<App />);
 
+    await user.click(screen.getByRole("button", { name: /sample\.md/ }));
     await user.click(screen.getByRole("button", { name: "시험보기" }));
     expect(screen.getByPlaceholderText("답을 입력하세요")).toHaveValue("md");
     await user.click(screen.getByRole("button", { name: "다음 문항" }));
@@ -163,6 +166,7 @@ describe("App", () => {
     secondRender.unmount();
     render(<App />);
 
+    await user.click(screen.getByRole("button", { name: /sample\.md/ }));
     await user.click(screen.getByRole("button", { name: "시험보기" }));
     expect(screen.getByText("정답: md")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("답을 입력하세요")).toBeDisabled();
@@ -176,7 +180,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "샘플 시작" }));
+    await uploadSampleMarkdown(user);
     await user.click(screen.getByRole("button", { name: "시험보기" }));
     await user.type(screen.getByPlaceholderText("답을 입력하세요"), "md");
     await user.click(screen.getByRole("button", { name: "저장" }));
@@ -206,6 +210,26 @@ describe("App", () => {
     );
   });
 
+  it("seeds doc files when local storage is empty", () => {
+    render(<App />);
+
+    expect(screen.getByRole("button", { name: "doc" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /정보처리기사_실기_개념요약본\.md/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /정보처리기사_실기_주관식_200제\.md/,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("샘플 불러오기")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "샘플 시작" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders inline and fenced code inside question prompts with code styles", async () => {
     const user = userEvent.setup();
     const markdown =
@@ -214,6 +238,7 @@ describe("App", () => {
     render(<App />);
 
     await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
+    await user.click(screen.getByRole("button", { name: /code\.md/ }));
 
     expect(document.querySelector(".question-inline-code")?.textContent).toBe(
       "md",
@@ -289,3 +314,15 @@ describe("App", () => {
     ).toHaveTextContent("123");
   });
 });
+
+async function uploadSampleMarkdown(user: ReturnType<typeof userEvent.setup>) {
+  const file = new File(
+    [
+      "1. 다음 중 STUDY_VIEWER가 기본으로 지원하는 파일은?\n답: md\n\n2. 정답 표시는 어떤 구문으로 감지되는가?\n정답: 정답:",
+    ],
+    "sample.md",
+    { type: "text/markdown" },
+  );
+  await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
+  await user.click(screen.getByRole("button", { name: /sample\.md/ }));
+}

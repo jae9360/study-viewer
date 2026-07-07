@@ -38,7 +38,9 @@ describe("Sidebar delete mode", () => {
       screen.queryByRole("button", { name: /delete-me\.md/ }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText("파일을 불러오면 문제가 표시됩니다."),
+      screen.getByRole("button", {
+        name: "정보처리기사_실기_개념요약본.md 파일 삭제",
+      }),
     ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Deleting..." }));
@@ -61,9 +63,7 @@ describe("Sidebar delete mode", () => {
 
     await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
     await user.click(screen.getByRole("button", { name: "Delete" }));
-    await user.click(
-      screen.getByRole("button", { name: "기본 폴더 폴더 삭제" }),
-    );
+    await user.click(screen.getByRole("button", { name: "doc 폴더 삭제" }));
 
     expect(
       screen.queryByRole("button", { name: /folder-file\.md/ }),

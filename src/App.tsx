@@ -11,7 +11,6 @@ import {
   removeFolderQuestionReveals,
   toggleQuestionReveal,
 } from "./app/revealedQuestions";
-import { sampleText } from "./app/sampleText";
 import {
   applyQuestionOrder,
   buildFolderStudyFile,
@@ -36,7 +35,7 @@ type ThemeName = "opencode" | "resend";
 const repository = createLocalStorageRepository();
 export function App() {
   const [library, setLibrary] = useState<LibraryState>(() =>
-    ensureInitialFolder(repository.load(), repository.saveFolders),
+    ensureInitialFolder(repository.load(), repository.saveLibrary),
   );
   const [selectedFolderId, setSelectedFolderId] = useState(
     () => library.folders[0]?.id ?? "",
@@ -101,11 +100,7 @@ export function App() {
   }
 
   function persistLibraryState(state: LibraryState): void {
-    repository.saveFolders(state.folders);
-    repository.saveFiles(state.files);
-    repository.saveAttempts(state.attempts);
-    repository.saveAnswerOverrides(state.answerOverrides);
-    repository.saveExamDrafts(state.examDrafts);
+    repository.saveLibrary(state);
     setLibrary(state);
   }
 
@@ -141,10 +136,6 @@ export function App() {
   async function importFile(file: File): Promise<void> {
     const text = await file.text();
     importText(file.name, text);
-  }
-
-  function importSample(): void {
-    importText("sample.md", sampleText);
   }
 
   function importText(name: string, text: string): void {
@@ -202,7 +193,6 @@ export function App() {
         onAddFolder={addFolder}
         isDeleteMode={isDeleteMode}
         onImportFile={importFile}
-        onImportSample={importSample}
         onDeleteFile={deleteFile}
         onDeleteFolder={deleteFolder}
         onSelectFolder={(folderId) => {
@@ -228,7 +218,7 @@ export function App() {
         <TopAppBar mode={viewMode} onChangeMode={setViewMode} />
         <section className="content-scroll">
           {orderedStudyFile === null ? (
-            <EmptyState onImportSample={importSample} />
+            <EmptyState />
           ) : (
             <ViewRouter
               mode={viewMode}

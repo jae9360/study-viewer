@@ -11,7 +11,6 @@ export type SidebarProps = {
   readonly onDeleteFile: (id: string) => void;
   readonly onDeleteFolder: (id: string) => void;
   readonly onImportFile: (file: File) => Promise<void>;
-  readonly onImportSample: () => void;
   readonly onSelectFolder: (id: string) => void;
   readonly onSelectFile: (id: string) => void;
   readonly onToggleDeleteMode: () => void;
@@ -103,9 +102,6 @@ export function Sidebar(props: SidebarProps) {
             }}
           />
         </label>
-        <button className="ghost" type="button" onClick={props.onImportSample}>
-          샘플 불러오기
-        </button>
       </div>
       <button
         aria-label="Resend night theme"
@@ -218,18 +214,11 @@ export function TopAppBar({
   );
 }
 
-export function EmptyState({
-  onImportSample,
-}: {
-  readonly onImportSample: () => void;
-}) {
+export function EmptyState() {
   return (
     <div className="empty">
       <h2>파일을 불러오면 문제가 표시됩니다.</h2>
-      <p>왼쪽 메뉴에서 md/txt 파일을 불러오거나 샘플을 사용하세요.</p>
-      <button className="primary" type="button" onClick={onImportSample}>
-        샘플 시작
-      </button>
+      <p>왼쪽 메뉴에서 md/txt 파일을 불러오세요.</p>
     </div>
   );
 }
