@@ -127,21 +127,21 @@
 }
 .bar {
   height: 8px;
-  max-width: 420px;
   flex: 1;
-  background: var(--question-card-inner);
+  min-width: 0;
+  background: var(--input-bg);
+  border: 1px solid var(--outline);
   border-radius: 999px;
   overflow: hidden;
 }
 .bar div {
   height: 100%;
-  background: var(--primary);
+  background: var(--ok);
   border-radius: inherit;
   transition: width 0.2s;
 }
 .order-strip {
-  position: sticky;
-  top: 0;
+  flex: 0 0 auto;
   z-index: 5;
   display: flex;
   justify-content: center;
@@ -158,16 +158,55 @@
   min-width: 0;
 }
 .progress-status {
-  flex: 1;
+  flex: 1.45 1 0;
+  gap: 10px;
 }
-.progress-status strong {
-  flex: 0 0 auto;
+.progress-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 0;
+  min-width: 0;
+  font-weight: 800;
+}
+.progress-picker span {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.progress-picker select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 28px 5px 10px;
 }
 .progress-time {
-  flex: 1;
+  flex: 0 0 auto;
   justify-content: flex-end;
 }
+.progress-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1.6 1 0;
+  min-width: 0;
+  justify-content: flex-end;
+}
+.progress-label {
+  color: var(--muted);
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 800;
+}
 .order-toggle {
+  flex: 0 0 auto;
   min-width: 88px;
   border: 1px solid var(--outline);
   border-radius: 999px;
@@ -183,10 +222,36 @@
 .timer-chip {
   border: 1px solid var(--outline);
   border-radius: 999px;
-  background: var(--input-bg);
-  color: var(--primary);
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  font-size: 12px;
   font-weight: 800;
-  padding: 5px 12px;
+  min-width: 88px;
+  padding: 6px 14px;
+  text-align: center;
+}
+.progress-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.progress-strip.compact .progress-status {
+  display: none;
+}
+.progress-strip.compact .order-toggle {
+  order: 1;
+}
+.progress-strip.compact .progress-actions {
+  order: 2;
+}
+.chrome-collapse-hover {
+  position: relative;
+  z-index: 6;
+  height: 16px;
+  margin: 0 0 -16px;
+}
+.mobile-chrome-collapse-toggle {
+  display: none;
 }
 .theme-toggle {
   position: fixed;

@@ -1,5 +1,7 @@
 .app-shell {
+  height: 100dvh;
   min-height: 100dvh;
+  overflow: hidden;
   background: var(--surface);
   color: var(--text);
 }
@@ -14,13 +16,26 @@
   padding: 24px 14px 72px;
   z-index: 10;
 }
+.sidebar-content {
+  min-height: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.sidebar-collapse-toggle,
+.sidebar-expand-toggle {
+  display: none;
+}
 .main-pane {
   margin-left: 260px;
+  height: 100dvh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .topbar {
+  flex: 0 0 auto;
   height: 64px;
   display: flex;
   align-items: center;
@@ -34,6 +49,11 @@
 .topbar strong {
   font-size: 20px;
 }
+.topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .topbar nav {
   display: flex;
   gap: 8px;
@@ -46,9 +66,13 @@
   border-radius: var(--radius-control);
   padding: 9px 12px;
 }
+.mobile-file-summary,
+.mobile-theme-toggle,
+.search-toggle {
+  display: none;
+}
 .progress-strip {
-  position: sticky;
-  top: 0;
+  flex: 0 0 auto;
   z-index: 5;
   display: flex;
   align-items: center;
@@ -60,15 +84,57 @@
 }
 .content-scroll {
   flex: 1;
-  overflow: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--surface);
-  padding: 0 24px 220px;
+  padding: 0;
+}
+.question-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: block;
+  background: var(--question-card-bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.tree,
+.question-scroll {
+  scrollbar-color: var(--question-card-border) transparent;
+  scrollbar-width: thin;
+}
+.tree::-webkit-scrollbar,
+.question-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.tree::-webkit-scrollbar-track,
+.question-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tree::-webkit-scrollbar-thumb,
+.question-scroll::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+.tree::-webkit-scrollbar-thumb {
+  background-color: var(--outline);
+}
+.question-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--question-card-border);
+}
+.tree::-webkit-scrollbar-thumb:hover,
+.question-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--question-card-muted);
+}
+.tree::-webkit-scrollbar-corner,
+.question-scroll::-webkit-scrollbar-corner {
+  background: transparent;
 }
 .answer-footer {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 260px;
+  flex: 0 0 auto;
   background: var(--strip);
   border-top: 1px solid var(--outline);
   color: var(--text);

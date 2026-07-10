@@ -61,14 +61,29 @@ describe("App", () => {
     expect(screen.getByRole("button", { name: "무작위" })).toBeInTheDocument();
   });
 
-  it("starts exam timing on entry and reveals the answer only after save", async () => {
+  it("moves between questions with arrow keys in single view", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await uploadSampleMarkdown(user);
+
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByText("QUESTION 2 / 2")).toBeInTheDocument();
+
+    await user.keyboard("{ArrowLeft}");
+    expect(screen.getByText("QUESTION 1 / 2")).toBeInTheDocument();
+  });
+
+  it("starts exam timing on entry and advances after a correct save", async () => {
     const user = userEvent.setup();
     render(<App />);
 
     await uploadSampleMarkdown(user);
     await user.click(screen.getByRole("button", { name: "시험보기" }));
 
-    expect(screen.getByText("진행도 (Test Progress)")).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "시험 진행도" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("00:00:00")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("답을 입력하세요")).toBeInTheDocument();
     expect(
@@ -79,13 +94,13 @@ describe("App", () => {
     await user.type(screen.getByPlaceholderText("답을 입력하세요"), "md");
     await user.click(screen.getByRole("button", { name: "저장" }));
 
-    expect(screen.getByText("정답: md")).toBeInTheDocument();
-    expect(screen.getByText("정답입니다")).toBeInTheDocument();
+    expect(screen.getByText("QUESTION 2 / 2")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("답을 입력하세요")).toHaveValue("");
     expect(
       screen.getByRole("button", { name: "이전 문항" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "다음 문항" }),
+      screen.getByRole("button", { name: "제출 완료" }),
     ).toBeInTheDocument();
   });
 
@@ -207,6 +222,23 @@ describe("App", () => {
     expect(screen.getByTestId("app-shell")).toHaveAttribute(
       "data-theme",
       "resend",
+    );
+  });
+
+  it("opens the mobile search input from the search icon", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const searchInput = screen.getByLabelText("Search files");
+    expect(searchInput).toHaveClass("search-input");
+    expect(searchInput).not.toHaveClass("open");
+
+    await user.click(screen.getByRole("button", { name: "검색 열기" }));
+
+    expect(searchInput).toHaveClass("open");
+    expect(screen.getByRole("button", { name: "검색 열기" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
     );
   });
 

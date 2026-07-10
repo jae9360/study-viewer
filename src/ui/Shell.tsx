@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Folder, StudyFile, ViewMode } from "../app/types";
 
 export type SidebarProps = {
@@ -18,100 +19,137 @@ export type SidebarProps = {
 };
 
 export function Sidebar(props: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const selectedFileName =
+    props.files.find((file) => file.id === props.selectedFileId)?.name ??
+    "파일을 선택하세요";
+
   return (
-    <aside className="sidebar">
-      <div className="brand">
-        <div className="brand-icon">SV</div>
-        <div>
-          <h1>STUDY_VIEWER</h1>
-          <p>Local exam workspace</p>
-        </div>
-      </div>
-      <nav className="tree" aria-label="folder tree">
-        {props.folders.map((folder) => (
-          <section key={folder.id} className="folder-block">
-            <div className="tree-item">
-              <button
-                className={
-                  folder.id === props.selectedFolderId
-                    ? "tree-row active"
-                    : "tree-row"
-                }
-                type="button"
-                onClick={() => props.onSelectFolder(folder.id)}
-              >
-                <FolderIcon />
-                <span>{folder.name}</span>
-              </button>
-              {props.isDeleteMode ? (
-                <DeleteMark
-                  label={`${folder.name} 폴더 삭제`}
-                  onClick={() => props.onDeleteFolder(folder.id)}
-                />
-              ) : null}
-            </div>
-            {props.files
-              .filter((file) => file.folderId === folder.id)
-              .map((file) => (
-                <div className="tree-item file-item" key={file.id}>
-                  <button
-                    className={
-                      file.id === props.selectedFileId
-                        ? "file-row active"
-                        : "file-row"
-                    }
-                    type="button"
-                    onClick={() => props.onSelectFile(file.id)}
-                  >
-                    <span>{file.name}</span>
-                    <small>{file.questions.length}문제</small>
-                  </button>
-                  {props.isDeleteMode ? (
-                    <DeleteMark
-                      label={`${file.name} 파일 삭제`}
-                      onClick={() => props.onDeleteFile(file.id)}
-                    />
-                  ) : null}
-                </div>
-              ))}
-          </section>
-        ))}
-      </nav>
-      <div className="sidebar-actions">
-        <button className="primary" type="button" onClick={props.onAddFolder}>
-          Add Folder
-        </button>
-        <button
-          aria-pressed={props.isDeleteMode}
-          className={props.isDeleteMode ? "danger active" : "danger"}
-          type="button"
-          onClick={props.onToggleDeleteMode}
-        >
-          {props.isDeleteMode ? "Deleting..." : "Delete"}
-        </button>
-        <label className="secondary">
-          Import File
-          <input
-            aria-label="md/txt 불러오기"
-            accept=".md,.txt,text/markdown,text/plain"
-            type="file"
-            onChange={(event) => {
-              const file = event.currentTarget.files?.[0];
-              if (file !== undefined) void props.onImportFile(file);
-              event.currentTarget.value = "";
-            }}
-          />
-        </label>
-      </div>
+    <aside
+      aria-label="Sidebar"
+      className={[
+        "sidebar",
+        isCollapsed ? "collapsed" : "",
+        isMobileExpanded ? "mobile-expanded" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <button
-        aria-label="Resend night theme"
-        aria-pressed={props.theme === "resend"}
-        className="theme-toggle"
+        aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
+        className={
+          isCollapsed ? "sidebar-expand-toggle" : "sidebar-collapse-toggle"
+        }
         type="button"
-        onClick={props.onToggleTheme}
+        onClick={() => setIsCollapsed((previous) => !previous)}
       >
-        <MoonIcon />
+        {isCollapsed ? ">" : "<"}
       </button>
+      <button
+        aria-expanded={isMobileExpanded}
+        aria-label={isMobileExpanded ? "파일 메뉴 접기" : "파일 메뉴 펼치기"}
+        className="mobile-file-summary"
+        type="button"
+        onClick={() => setIsMobileExpanded((previous) => !previous)}
+      >
+        <span aria-hidden="true">{selectedFileName}</span>
+        <ChevronDownIcon />
+      </button>
+      <div className="sidebar-content">
+        <div className="brand">
+          <div className="brand-icon">SV</div>
+          <div>
+            <h1>STUDY_VIEWER</h1>
+            <p>Local exam workspace</p>
+          </div>
+        </div>
+        <nav className="tree" aria-label="folder tree">
+          {props.folders.map((folder) => (
+            <section key={folder.id} className="folder-block">
+              <div className="tree-item">
+                <button
+                  className={
+                    folder.id === props.selectedFolderId
+                      ? "tree-row active"
+                      : "tree-row"
+                  }
+                  type="button"
+                  onClick={() => props.onSelectFolder(folder.id)}
+                >
+                  <FolderIcon />
+                  <span>{folder.name}</span>
+                </button>
+                {props.isDeleteMode ? (
+                  <DeleteMark
+                    label={`${folder.name} 폴더 삭제`}
+                    onClick={() => props.onDeleteFolder(folder.id)}
+                  />
+                ) : null}
+              </div>
+              {props.files
+                .filter((file) => file.folderId === folder.id)
+                .map((file) => (
+                  <div className="tree-item file-item" key={file.id}>
+                    <button
+                      className={
+                        file.id === props.selectedFileId
+                          ? "file-row active"
+                          : "file-row"
+                      }
+                      type="button"
+                      onClick={() => props.onSelectFile(file.id)}
+                    >
+                      <span>{file.name}</span>
+                      <small>{file.questions.length}문제</small>
+                    </button>
+                    {props.isDeleteMode ? (
+                      <DeleteMark
+                        label={`${file.name} 파일 삭제`}
+                        onClick={() => props.onDeleteFile(file.id)}
+                      />
+                    ) : null}
+                  </div>
+                ))}
+            </section>
+          ))}
+        </nav>
+        <div className="sidebar-actions">
+          <button className="primary" type="button" onClick={props.onAddFolder}>
+            Add Folder
+          </button>
+          <button
+            aria-pressed={props.isDeleteMode}
+            className={props.isDeleteMode ? "danger active" : "danger"}
+            type="button"
+            onClick={props.onToggleDeleteMode}
+          >
+            {props.isDeleteMode ? "Deleting..." : "Delete"}
+          </button>
+          <label className="secondary">
+            Import File
+            <input
+              aria-label="md/txt 불러오기"
+              accept=".md,.txt,text/markdown,text/plain"
+              type="file"
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                if (file !== undefined) void props.onImportFile(file);
+                event.currentTarget.value = "";
+              }}
+            />
+          </label>
+        </div>
+        <button
+          aria-label="모바일 낮/밤 전환"
+          aria-pressed={props.theme === "resend"}
+          className="theme-toggle"
+          type="button"
+          onClick={props.onToggleTheme}
+        >
+          <MoonIcon />
+        </button>
+      </div>
     </aside>
   );
 }
@@ -183,11 +221,16 @@ function FolderIcon() {
 
 export function TopAppBar({
   mode,
+  theme,
   onChangeMode,
+  onToggleTheme,
 }: {
   readonly mode: ViewMode;
+  readonly theme: "opencode" | "resend";
   readonly onChangeMode: (mode: ViewMode) => void;
+  readonly onToggleTheme: () => void;
 }) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const tabs: readonly { readonly mode: ViewMode; readonly label: string }[] = [
     { mode: "single", label: "단건보기" },
     { mode: "all", label: "모두보기" },
@@ -196,7 +239,18 @@ export function TopAppBar({
   ];
   return (
     <header className="topbar">
-      <strong>Workspace Reader</strong>
+      <div className="topbar-title">
+        <strong>Workspace Reader</strong>
+        <button
+          aria-label="Resend night theme"
+          aria-pressed={theme === "resend"}
+          className="mobile-theme-toggle"
+          type="button"
+          onClick={onToggleTheme}
+        >
+          <MoonIcon />
+        </button>
+      </div>
       <nav>
         {tabs.map((tab) => (
           <button
@@ -208,9 +262,64 @@ export function TopAppBar({
             {tab.label}
           </button>
         ))}
+        <button
+          aria-expanded={isSearchOpen}
+          aria-label="검색 열기"
+          className="search-toggle"
+          type="button"
+          onClick={() => setIsSearchOpen((previous) => !previous)}
+        >
+          <SearchIcon />
+        </button>
       </nav>
-      <input aria-label="Search files" placeholder="Search files..." />
+      <input
+        aria-label="Search files"
+        className={isSearchOpen ? "search-input open" : "search-input"}
+        placeholder="Search files..."
+      />
     </header>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height="18"
+      viewBox="0 0 24 24"
+      width="18"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m6 9 6 6 6-6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height="18"
+      viewBox="0 0 24 24"
+      width="18"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
   );
 }
 

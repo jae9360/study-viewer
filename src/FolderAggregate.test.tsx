@@ -76,7 +76,9 @@ describe("Folder aggregate questions", () => {
 
     await user.click(screen.getByRole("button", { name: "시험보기" }));
 
-    expect(screen.getByText("진행도 (Test Progress)")).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "시험 진행도" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "무작위" })).toBeInTheDocument();
     expect(screen.getByText("00:00:00")).toBeInTheDocument();
     expect(

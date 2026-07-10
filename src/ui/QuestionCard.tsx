@@ -60,8 +60,7 @@ function AnswerMask({
   readonly onReveal: () => void;
   readonly onSaveAnswerOverride?: (answer: string) => void;
 }) {
-  if (answer === null)
-    return <div className="mask neutral">정답 구문 없음</div>;
+  if (answer === null) return null;
   if (revealed)
     return (
       <EditableAnswer

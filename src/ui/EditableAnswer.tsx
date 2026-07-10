@@ -27,9 +27,7 @@ export function EditableAnswer({
     [],
   );
 
-  if (answer === null) {
-    return <div className="visible-answer neutral">정답 구문 없음</div>;
-  }
+  if (answer === null) return null;
 
   return (
     <div className={showRaw ? "answer-editable raw-mode" : "answer-editable"}>

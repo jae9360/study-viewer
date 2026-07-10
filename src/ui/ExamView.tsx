@@ -9,20 +9,24 @@ import type {
 } from "../app/types";
 import { buildOverrideMap, effectiveAnswer } from "../domain/answerOverride";
 import { checkCorrectness } from "../domain/correctness";
-import { displayAnswer } from "../domain/displayAnswer";
 import { gradeAnswers } from "../domain/scoring";
 import { createId } from "../infra/id";
 import { ExamAnswerFooter } from "./ExamAnswerFooter";
+import { ExamQuestion } from "./ExamQuestion";
+import { collectAnswerResults } from "./examProgress";
 import { ProgressStrip } from "./ProgressControls";
-import { InlineCodeText, QuestionPrompt } from "./QuestionPrompt";
 
 export function ExamView({
   file,
   attempts,
   examDrafts,
   answerOverrides,
+  currentIndex,
+  isChromeCollapsed,
   orderMode,
   onToggleOrder,
+  onMove,
+  onToggleChrome,
   onSaveAttempt,
   onSaveExamDraft,
   onClearExamDraft,
@@ -31,8 +35,12 @@ export function ExamView({
   readonly attempts: readonly Attempt[];
   readonly examDrafts: readonly ExamDraft[];
   readonly answerOverrides: readonly AnswerOverride[];
+  readonly currentIndex: number;
+  readonly isChromeCollapsed: boolean;
   readonly orderMode: OrderMode;
   readonly onToggleOrder: () => void;
+  readonly onMove: (index: number) => void;
+  readonly onToggleChrome: () => void;
   readonly onSaveAttempt: (attempt: Attempt) => void;
   readonly onSaveExamDraft: (draft: ExamDraft) => void;
   readonly onClearExamDraft: (fileId: string) => void;
@@ -42,7 +50,6 @@ export function ExamView({
   const submittedAttempt = draft === null ? latestAttempt : null;
   const [startedAt, setStartedAt] = useState(draft?.startedAt ?? Date.now());
   const [now, setNow] = useState(Date.now());
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>(
     () => draft?.answers ?? submittedAttempt?.answers ?? {},
   );
@@ -67,29 +74,75 @@ export function ExamView({
 
   const question = file.questions[currentIndex] ?? null;
   const overrideMap = buildOverrideMap(answerOverrides, file.id);
-  const answered = file.questions.filter(
-    (item) => (answers[item.id] ?? "").trim().length > 0,
-  ).length;
+  const answerResults = collectAnswerResults({
+    questions: file.questions,
+    answers,
+    overrideMap,
+    savedQuestionIds,
+  });
   const timerText = formatTime(submittedAttempt?.durationMs ?? now - startedAt);
   const isSubmitted = submittedAttempt !== null;
 
-  function saveCurrent(): void {
-    if (question === null) return;
+  useEffect(() => {
+    if (isSubmitted) return undefined;
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.defaultPrevented) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        onMove(Math.max(0, currentIndex - 1));
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        onMove(Math.min(file.questions.length - 1, currentIndex + 1));
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex, file.questions.length, isSubmitted, onMove]);
+
+  function goPrevious(): void {
+    onMove(Math.max(0, currentIndex - 1));
+  }
+
+  function goNext(): void {
+    onMove(Math.min(file.questions.length - 1, currentIndex + 1));
+  }
+
+  function saveCurrent(): boolean {
+    if (question === null) return false;
     const nextAnswers = answers;
     onSaveExamDraft({ fileId: file.id, answers: nextAnswers, startedAt });
     setSavedQuestionIds((previous) => new Set(previous).add(question.id));
+    if (currentIndex >= file.questions.length - 1) {
+      return submitExam(nextAnswers);
+    }
+    if (
+      checkCorrectness(
+        nextAnswers[question.id] ?? "",
+        effectiveAnswer(question, overrideMap),
+      ) &&
+      currentIndex < file.questions.length - 1
+    )
+      onMove(currentIndex + 1);
+    return true;
   }
 
-  function submitExam(): void {
-    if (question === null) return;
+  function submitExam(nextAnswers: Record<string, string>): boolean {
+    if (isSubmitted) {
+      window.alert("이미 제출 완료된 데이터입니다");
+      return false;
+    }
+    if (question === null) return false;
     const finishedAt = Date.now();
-    const score = gradeAnswers(file.questions, answers, overrideMap);
+    const score = gradeAnswers(file.questions, nextAnswers, overrideMap);
     onSaveAttempt({
       id: createId("attempt"),
       fileId: file.id,
       round:
         attempts.filter((attempt) => attempt.fileId === file.id).length + 1,
-      answers,
+      answers: nextAnswers,
       results: score.results,
       score: score.score,
       total: score.total,
@@ -99,6 +152,12 @@ export function ExamView({
     });
     onClearExamDraft(file.id);
     setSavedQuestionIds(new Set(file.questions.map((item) => item.id)));
+    window.alert("저장되었습니다.");
+    return true;
+  }
+
+  function submitCurrentExam(): boolean {
+    return submitExam(answers);
   }
 
   function resetExam(): void {
@@ -112,32 +171,41 @@ export function ExamView({
     setStartedAt(nextStartedAt);
     setAnswers(emptyAnswers);
     setSavedQuestionIds(new Set());
-    setCurrentIndex(0);
+    onMove(0);
     setNow(nextStartedAt);
   }
 
   return (
     <>
       <ProgressStrip
-        answered={answered}
+        correctItems={answerResults.correctItems}
+        failedItems={answerResults.failedItems}
+        isCompact={isChromeCollapsed}
         total={file.questions.length}
         timerText={timerText}
         orderMode={orderMode}
         onToggleOrder={onToggleOrder}
         onReset={resetExam}
+        onSelectQuestion={onMove}
       />
-      <div className="exam">
-        {question === null ? (
-          <EmptyExam />
-        ) : (
-          <ExamQuestion
-            question={question}
-            correctAnswer={effectiveAnswer(question, overrideMap)}
-            reference={`${questionReference(question, file.name)} · QUESTION ${currentIndex + 1} / ${file.questions.length}`}
-            answer={answers[question.id] ?? ""}
-            isSaved={isSubmitted || savedQuestionIds.has(question.id)}
-          />
-        )}
+      <ChromeCollapseHandle
+        isCollapsed={isChromeCollapsed}
+        onToggle={onToggleChrome}
+      />
+      <div className="question-scroll">
+        <div className="exam">
+          {question === null ? (
+            <EmptyExam />
+          ) : (
+            <ExamQuestion
+              question={question}
+              correctAnswer={effectiveAnswer(question, overrideMap)}
+              reference={`${questionReference(question, file.name)} · QUESTION ${currentIndex + 1} / ${file.questions.length}`}
+              answer={answers[question.id] ?? ""}
+              isSaved={isSubmitted || savedQuestionIds.has(question.id)}
+            />
+          )}
+        </div>
       </div>
       <ExamAnswerFooter
         question={question}
@@ -150,68 +218,59 @@ export function ExamView({
             setAnswers((previous) => ({ ...previous, [question.id]: value }));
         }}
         onSave={saveCurrent}
-        onPrev={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
-        onNext={() =>
-          setCurrentIndex(Math.min(file.questions.length - 1, currentIndex + 1))
-        }
-        onSubmit={submitExam}
+        onPrev={goPrevious}
+        onNext={goNext}
+        onSubmit={submitCurrentExam}
       />
     </>
   );
 }
 
-function ExamQuestion({
-  question,
-  correctAnswer,
-  reference,
-  answer,
-  isSaved,
+function ChromeCollapseHandle({
+  isCollapsed,
+  onToggle,
 }: {
-  readonly question: Question;
-  readonly correctAnswer: string | null;
-  readonly reference: string;
-  readonly answer: string;
-  readonly isSaved: boolean;
+  readonly isCollapsed: boolean;
+  readonly onToggle: () => void;
 }) {
-  const isCorrect = checkCorrectness(answer, correctAnswer);
   return (
-    <article className="question-card">
-      <div className="question-meta">
-        <span>Question {question.index.toString().padStart(2, "0")}</span>
-        <small>{reference}</small>
-      </div>
-      <QuestionPrompt text={question.prompt} />
-      {isSaved ? (
-        <SavedAnswer
-          answer={correctAnswer}
-          rawAnswer={question.rawAnswer}
-          isCorrect={isCorrect}
-        />
-      ) : null}
-    </article>
+    <div className="chrome-collapse-hover">
+      <button
+        aria-label={
+          isCollapsed ? "모바일 상단 메뉴 펼치기" : "모바일 상단 메뉴 접기"
+        }
+        className={
+          isCollapsed
+            ? "mobile-chrome-collapse-toggle collapsed"
+            : "mobile-chrome-collapse-toggle"
+        }
+        type="button"
+        onClick={onToggle}
+      >
+        <ChevronIcon pointsDown={isCollapsed} />
+      </button>
+    </div>
   );
 }
 
-function SavedAnswer({
-  answer,
-  rawAnswer,
-  isCorrect,
-}: {
-  readonly answer: string | null;
-  readonly rawAnswer: string | null;
-  readonly isCorrect: boolean;
-}) {
-  if (answer === null)
-    return <div className="mask neutral">정답 구문 없음</div>;
+function ChevronIcon({ pointsDown }: { readonly pointsDown: boolean }) {
   return (
-    <div className="exam-saved-answer">
-      <div>
-        <InlineCodeText text={`정답: ${displayAnswer(answer, rawAnswer)}`} />
-      </div>
-      <strong className={isCorrect ? "result correct" : "result wrong"}>
-        {isCorrect ? "정답입니다" : "오답입니다"}
-      </strong>
-    </div>
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height="18"
+      viewBox="0 0 24 24"
+      width="18"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d={pointsDown ? "m6 9 6 6 6-6" : "m6 15 6-6 6 6"}
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
   );
 }
 

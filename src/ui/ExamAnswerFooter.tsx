@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from "react";
 import type { Question } from "../app/types";
 
 export function ExamAnswerFooter(props: {
@@ -13,6 +14,29 @@ export function ExamAnswerFooter(props: {
   readonly onSubmit: () => void;
 }) {
   const isLast = props.index >= props.total - 1;
+  function handleAnswerKeyDown(
+    event: KeyboardEvent<HTMLTextAreaElement>,
+  ): void {
+    if (props.disabled || event.nativeEvent.isComposing) return;
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+      props.onSave();
+      return;
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      event.stopPropagation();
+      props.onPrev();
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      event.stopPropagation();
+      props.onNext();
+    }
+  }
+
   return (
     <footer className="answer-footer">
       <section>
@@ -20,6 +44,7 @@ export function ExamAnswerFooter(props: {
         <textarea
           value={props.answer}
           onChange={(event) => props.onAnswer(event.currentTarget.value)}
+          onKeyDown={handleAnswerKeyDown}
           placeholder="답을 입력하세요"
           disabled={props.disabled}
         />

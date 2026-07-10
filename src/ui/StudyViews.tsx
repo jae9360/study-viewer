@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type {
   AnswerOverride,
   Attempt,
@@ -20,12 +21,16 @@ export function ViewRouter(props: {
   readonly examDrafts: readonly ExamDraft[];
   readonly answerOverrides: readonly AnswerOverride[];
   readonly currentIndex: number;
+  readonly examIndex: number;
+  readonly isExamChromeCollapsed: boolean;
   readonly currentQuestion: Question | null;
   readonly orderMode: OrderMode;
   readonly revealed: ReadonlySet<string>;
   readonly onToggleOrder: () => void;
   readonly onReveal: (id: string) => void;
   readonly onMove: (index: number) => void;
+  readonly onMoveExam: (index: number) => void;
+  readonly onToggleExamChrome: () => void;
   readonly onSaveAttempt: (attempt: Attempt) => void;
   readonly onSaveAnswerOverride: (override: AnswerOverride) => void;
   readonly onSaveExamDraft: (draft: ExamDraft) => void;
@@ -39,8 +44,12 @@ export function ViewRouter(props: {
         attempts={props.attempts}
         examDrafts={props.examDrafts}
         answerOverrides={props.answerOverrides}
+        currentIndex={props.examIndex}
+        isChromeCollapsed={props.isExamChromeCollapsed}
         orderMode={props.orderMode}
         onToggleOrder={props.onToggleOrder}
+        onMove={props.onMoveExam}
+        onToggleChrome={props.onToggleExamChrome}
         onSaveAttempt={props.onSaveAttempt}
         onSaveExamDraft={props.onSaveExamDraft}
         onClearExamDraft={props.onClearExamDraft}
@@ -63,6 +72,26 @@ function SingleView(props: {
   readonly onSaveAnswerOverride: (override: AnswerOverride) => void;
   readonly onMove: (index: number) => void;
 }) {
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.defaultPrevented || isTextInputTarget(event.target)) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        props.onMove(Math.max(0, props.currentIndex - 1));
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        props.onMove(
+          Math.min(props.file.questions.length - 1, props.currentIndex + 1),
+        );
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [props.currentIndex, props.file.questions.length, props.onMove]);
+
   if (props.currentQuestion === null) return <EmptyQuestion />;
   const question = props.currentQuestion;
   const overrideMap = buildOverrideMap(props.answerOverrides, props.file.id);
@@ -72,22 +101,24 @@ function SingleView(props: {
         orderMode={props.orderMode}
         onToggleOrder={props.onToggleOrder}
       />
-      <QuestionCard
-        question={question}
-        effectiveAnswer={effectiveAnswer(question, overrideMap)}
-        revealed={props.revealed.has(question.id)}
-        onReveal={() => props.onReveal(question.id)}
-        onSaveAnswerOverride={(answer) =>
-          props.onSaveAnswerOverride({
-            fileId: props.file.id,
-            questionId: question.id,
-            answer,
-            updatedAt: Date.now(),
-          })
-        }
-        reference={`${questionReference(question, props.file.name)} · QUESTION ${props.currentIndex + 1} / ${props.file.questions.length}`}
-        answerMode="mask"
-      />
+      <div className="question-scroll">
+        <QuestionCard
+          question={question}
+          effectiveAnswer={effectiveAnswer(question, overrideMap)}
+          revealed={props.revealed.has(question.id)}
+          onReveal={() => props.onReveal(question.id)}
+          onSaveAnswerOverride={(answer) =>
+            props.onSaveAnswerOverride({
+              fileId: props.file.id,
+              questionId: question.id,
+              answer,
+              updatedAt: Date.now(),
+            })
+          }
+          reference={`${questionReference(question, props.file.name)} · QUESTION ${props.currentIndex + 1} / ${props.file.questions.length}`}
+          answerMode="mask"
+        />
+      </div>
       <SingleNavigation
         index={props.currentIndex}
         total={props.file.questions.length}
@@ -99,6 +130,17 @@ function SingleView(props: {
         }
       />
     </>
+  );
+}
+
+function isTextInputTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tagName = target.tagName.toLowerCase();
+  return (
+    tagName === "input" ||
+    tagName === "textarea" ||
+    tagName === "select" ||
+    target.isContentEditable
   );
 }
 
@@ -116,18 +158,20 @@ function AllView(props: {
         orderMode={props.orderMode}
         onToggleOrder={props.onToggleOrder}
       />
-      <div className="stack">
-        {props.file.questions.map((question) => (
-          <QuestionCard
-            key={question.id}
-            question={question}
-            effectiveAnswer={effectiveAnswer(question, overrideMap)}
-            revealed={false}
-            onReveal={() => undefined}
-            reference={questionReference(question, props.file.name)}
-            answerMode="visible"
-          />
-        ))}
+      <div className="question-scroll">
+        <div className="stack">
+          {props.file.questions.map((question) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              effectiveAnswer={effectiveAnswer(question, overrideMap)}
+              revealed={false}
+              onReveal={() => undefined}
+              reference={questionReference(question, props.file.name)}
+              answerMode="visible"
+            />
+          ))}
+        </div>
       </div>
     </>
   );

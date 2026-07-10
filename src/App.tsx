@@ -45,10 +45,12 @@ export function App() {
   );
   const [viewMode, setViewMode] = useState<ViewMode>("single");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [examIndex, setExamIndex] = useState(0);
   const [revealed, setRevealed] = useState<ReadonlySet<string>>(new Set());
   const [toast, setToast] = useState("");
   const [theme, setTheme] = useState<ThemeName>("opencode");
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isExamChromeCollapsed, setIsExamChromeCollapsed] = useState(false);
   const [orderMode, setOrderMode] = useState<OrderMode>("sequential");
   const [shuffleSeed, setShuffleSeed] = useState(0);
 
@@ -131,6 +133,7 @@ export function App() {
     setSelectedFolderId(folder.id);
     setSelectedFileId(null);
     setCurrentIndex(0);
+    setExamIndex(0);
   }
 
   async function importFile(file: File): Promise<void> {
@@ -145,6 +148,7 @@ export function App() {
     updateFiles([...library.files, studyFile]);
     setSelectedFileId(studyFile.id);
     setCurrentIndex(0);
+    setExamIndex(0);
     setToast(`${name} 불러오기 완료`);
   }
 
@@ -154,6 +158,7 @@ export function App() {
     if (selectedFileId === fileId) {
       setSelectedFileId(nextLibrary.files[0]?.id ?? null);
       setCurrentIndex(0);
+      setExamIndex(0);
     }
     setRevealed((previous) =>
       removeFileQuestionReveals(previous, library.files, fileId),
@@ -177,6 +182,7 @@ export function App() {
     if (selectedFileId !== null && deletedFileIds.has(selectedFileId)) {
       setSelectedFileId(nextLibrary.files[0]?.id ?? null);
       setCurrentIndex(0);
+      setExamIndex(0);
     }
     setRevealed((previous) =>
       removeFolderQuestionReveals(previous, library.files, deletedFileIds),
@@ -184,7 +190,18 @@ export function App() {
   }
 
   return (
-    <div className="app-shell" data-testid="app-shell" data-theme={theme}>
+    <div
+      className={[
+        "app-shell",
+        viewMode === "exam" && isExamChromeCollapsed
+          ? "exam-chrome-collapsed"
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      data-testid="app-shell"
+      data-theme={theme}
+    >
       <Sidebar
         folders={library.folders}
         files={library.files}
@@ -199,12 +216,14 @@ export function App() {
           setSelectedFolderId(folderId);
           setSelectedFileId(null);
           setCurrentIndex(0);
+          setExamIndex(0);
         }}
         onSelectFile={(fileId) => {
           const file = library.files.find((item) => item.id === fileId);
           if (file !== undefined) setSelectedFolderId(file.folderId);
           setSelectedFileId(fileId);
           setCurrentIndex(0);
+          setExamIndex(0);
         }}
         theme={theme}
         onToggleTheme={() =>
@@ -215,7 +234,16 @@ export function App() {
         onToggleDeleteMode={() => setIsDeleteMode((previous) => !previous)}
       />
       <main className="main-pane">
-        <TopAppBar mode={viewMode} onChangeMode={setViewMode} />
+        <TopAppBar
+          mode={viewMode}
+          theme={theme}
+          onChangeMode={setViewMode}
+          onToggleTheme={() =>
+            setTheme((previous) =>
+              previous === "opencode" ? "resend" : "opencode",
+            )
+          }
+        />
         <section className="content-scroll">
           {orderedStudyFile === null ? (
             <EmptyState />
@@ -227,6 +255,8 @@ export function App() {
               examDrafts={library.examDrafts}
               answerOverrides={library.answerOverrides}
               currentIndex={currentIndex}
+              examIndex={examIndex}
+              isExamChromeCollapsed={isExamChromeCollapsed}
               currentQuestion={currentQuestion}
               orderMode={orderMode}
               revealed={revealed}
@@ -237,11 +267,16 @@ export function App() {
                   orderMode === "sequential" ? "shuffle" : "sequential",
                 );
                 setCurrentIndex(0);
+                setExamIndex(0);
               }}
               onReveal={(id) =>
                 setRevealed((previous) => toggleQuestionReveal(previous, id))
               }
               onMove={setCurrentIndex}
+              onMoveExam={setExamIndex}
+              onToggleExamChrome={() =>
+                setIsExamChromeCollapsed((previous) => !previous)
+              }
               onSaveAttempt={(attempt) =>
                 updateAttempts([...library.attempts, attempt])
               }
