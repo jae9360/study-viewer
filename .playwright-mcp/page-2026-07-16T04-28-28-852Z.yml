@@ -1,0 +1,28 @@
+- generic [ref=f5e3]:
+  - complementary "Sidebar" [ref=f5e4]:
+    - button "사이드바 접기": <
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - generic [ref=f5e7]: SV
+        - generic [ref=f5e8]:
+          - heading "STUDY_VIEWER" [level=1] [ref=f5e9]
+          - paragraph [ref=f5e10]: Local exam workspace
+      - navigation "folder tree" [ref=f5e11]
+      - generic [ref=f5e12]:
+        - button "Add Folder" [ref=f5e13] [cursor=pointer]
+        - button "Delete" [ref=f5e14] [cursor=pointer]
+        - generic [ref=f5e15]: Import File
+      - button "모바일 낮/밤 전환" [ref=f5e16] [cursor=pointer]
+  - main [ref=f5e19]:
+    - generic [ref=f5e20]:
+      - strong [ref=f5e22]: Workspace Reader
+      - navigation [ref=f5e23]:
+        - button "단건보기" [ref=f5e24] [cursor=pointer]
+        - button "모두보기" [ref=f5e25] [cursor=pointer]
+        - button "시험보기" [ref=f5e26] [cursor=pointer]
+        - button "통계" [ref=f5e27] [cursor=pointer]
+      - textbox "Search files" [ref=f5e28]:
+        - /placeholder: Search files...
+    - generic [ref=f5e30]:
+      - heading "파일을 불러오면 문제가 표시됩니다." [level=2] [ref=f5e31]
+      - paragraph [ref=f5e32]: 왼쪽 메뉴에서 md/txt 파일을 불러오세요.

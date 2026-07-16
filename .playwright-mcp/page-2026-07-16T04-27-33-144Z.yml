@@ -1,0 +1,13 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e4]: "[plugin:vite:import-analysis] Failed to resolve import \"../../doc/정보처리기사_실기_개념요약본.md?raw\" from \"src/app/initialLibrary.ts\". Does the file exist?"
+  - generic [ref=f1e5]: C:/work/study_viewer/src/app/initialLibrary.ts:1:27
+  - generic [ref=f1e6]: "1 | import conceptSummary from \"../../doc/정보처리기사_실기_개념요약본.md?raw\"; | ^ 2 | import writtenQuestions from \"../../doc/정보처리기사_실기_주관식_200제.md?raw\"; 3 | import { parseQuestions } from \"../domain/parseQuestions\";"
+  - generic [ref=f1e7]: at TransformPluginContext._formatLog (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:29960:39) at TransformPluginContext.error (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:29957:14) at normalizeUrl (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:26993:18) at async file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:27056:30 at async Promise.all (index 0) at async TransformPluginContext.transform (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:27024:4) at async EnvironmentPluginContainer.transform (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:29745:14) at async loadAndTransform (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:19729:26) at async viteTransformMiddleware (file:///C:/work/study_viewer/node_modules/vite/dist/node/chunks/node.js:24160:20)
+  - generic [ref=f1e8]:
+    - text: Click outside, press Esc key, or fix the code to dismiss.You can also disable this overlay by setting
+    - code [ref=f1e9]: server.hmr.overlay
+    - text: to
+    - code [ref=f1e10]: "false"
+    - text: in
+    - code [ref=f1e11]: vite.config.ts
+    - text: .
