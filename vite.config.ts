@@ -3,6 +3,9 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   base: "/study-viewer/",
+  server: {
+    host: true,
+  },
   plugins: [react()],
   test: {
     environment: "jsdom",

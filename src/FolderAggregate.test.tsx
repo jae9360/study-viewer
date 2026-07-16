@@ -61,6 +61,10 @@ describe("Folder aggregate questions", () => {
 
     await user.click(screen.getByRole("button", { name: "무작위" }));
 
+    expect(screen.getByRole("button", { name: "오답만" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "오답만" }));
+
     expect(screen.getByRole("button", { name: "순차" })).toBeInTheDocument();
     expect(screen.getByText("QUESTION 1 / 211")).toBeInTheDocument();
     expect(document.querySelector(".question-prompt")).toHaveTextContent(

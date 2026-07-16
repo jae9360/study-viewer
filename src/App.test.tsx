@@ -59,6 +59,8 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: "순차" }));
     expect(screen.getByRole("button", { name: "무작위" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "무작위" }));
+    expect(screen.getByRole("button", { name: "오답만" })).toBeInTheDocument();
   });
 
   it("moves between questions with arrow keys in single view", async () => {

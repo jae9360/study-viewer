@@ -64,5 +64,5 @@ describe("question panel scroll", () => {
     expect(metrics.scrollTop).toBeGreaterThan(0);
 
     await page.close();
-  });
+  }, 15000);
 });

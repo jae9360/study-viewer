@@ -100,6 +100,71 @@ describe("exam auto advance", () => {
     expect(screen.getByText("QUESTION 2 / 2")).toBeInTheDocument();
   });
 
+  it("retries only latest wrong questions and saves other questions as correct", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await uploadThreeQuestionMarkdown(user);
+    await user.click(screen.getByRole("button", { name: "시험보기" }));
+    await user.type(screen.getByPlaceholderText("답을 입력하세요"), "A");
+    await user.keyboard("{Enter}");
+    await user.type(screen.getByPlaceholderText("답을 입력하세요"), "wrong");
+    await user.click(screen.getByRole("button", { name: "저장" }));
+    await user.click(screen.getByRole("button", { name: "다음 문항" }));
+    await user.type(screen.getByPlaceholderText("답을 입력하세요"), "wrong");
+    await user.click(screen.getByRole("button", { name: "저장" }));
+
+    await user.click(screen.getByRole("button", { name: "새로고침" }));
+    await user.click(screen.getByRole("button", { name: "순차" }));
+    await user.click(screen.getByRole("button", { name: "무작위" }));
+
+    expect(screen.getByRole("button", { name: "오답만" })).toBeInTheDocument();
+    expect(screen.queryByText("첫째 문제")).not.toBeInTheDocument();
+    expect(screen.getByText("QUESTION 1 / 2")).toBeInTheDocument();
+    expect(document.querySelector(".question-prompt")?.textContent).toMatch(
+      /둘째 문제|셋째 문제/,
+    );
+
+    const firstWrongPrompt =
+      document.querySelector(".question-prompt")?.textContent ?? "";
+    if (firstWrongPrompt.includes("둘째 문제")) {
+      await user.type(screen.getByPlaceholderText("답을 입력하세요"), "B");
+      await user.keyboard("{Enter}");
+      await user.type(
+        screen.getByPlaceholderText("답을 입력하세요"),
+        "wrong again",
+      );
+      await user.click(screen.getByRole("button", { name: "저장" }));
+    } else {
+      await user.type(
+        screen.getByPlaceholderText("답을 입력하세요"),
+        "wrong again",
+      );
+      await user.click(screen.getByRole("button", { name: "다음 문항" }));
+      await user.type(screen.getByPlaceholderText("답을 입력하세요"), "B");
+      await user.click(screen.getByRole("button", { name: "저장" }));
+    }
+
+    const stored = JSON.parse(
+      localStorage.getItem("STUDY_VIEWER_LIBRARY_V1") ?? "{}",
+    ) as {
+      readonly attempts?: readonly {
+        readonly results?: Readonly<Record<string, boolean>>;
+        readonly score?: number;
+        readonly total?: number;
+      }[];
+    };
+    const latestAttempt = stored.attempts?.at(-1);
+
+    expect(latestAttempt?.results).toEqual({
+      q_1: true,
+      q_2: true,
+      q_3: false,
+    });
+    expect(latestAttempt?.score).toBe(2);
+    expect(latestAttempt?.total).toBe(3);
+  });
+
   it("copies the displayed correct answer in exam view", async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);
@@ -231,6 +296,18 @@ async function uploadTwoQuestionMarkdown(
   );
   await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
   await user.click(screen.getByRole("button", { name: /sample\.md/ }));
+}
+
+async function uploadThreeQuestionMarkdown(
+  user: ReturnType<typeof userEvent.setup>,
+) {
+  const file = new File(
+    ["1. 첫째 문제\n답: A\n\n2. 둘째 문제\n답: B\n\n3. 셋째 문제\n답: C"],
+    "three.md",
+    { type: "text/markdown" },
+  );
+  await user.upload(screen.getByLabelText("md/txt 불러오기"), file);
+  await user.click(screen.getByRole("button", { name: /three\.md/ }));
 }
 
 function expectBefore(first: Element, second: Element): void {

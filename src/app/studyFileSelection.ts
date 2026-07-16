@@ -1,4 +1,4 @@
-import type { Folder, OrderMode, StudyFile } from "./types";
+import type { Attempt, Folder, OrderMode, StudyFile } from "./types";
 
 export function buildFolderStudyFile(
   folder: Folder | null,
@@ -29,12 +29,10 @@ export function applyQuestionOrder(
   file: StudyFile | null,
   orderMode: OrderMode,
   shuffleSeed: number,
+  latestAttempt: Attempt | null = null,
 ): StudyFile | null {
   if (file === null) return null;
-  const questions =
-    orderMode === "sequential"
-      ? file.questions
-      : shuffleQuestions(file.questions, file.id, shuffleSeed);
+  const questions = orderQuestions(file, orderMode, shuffleSeed, latestAttempt);
   return {
     ...file,
     questions: questions.map((question, index) => ({
@@ -42,6 +40,39 @@ export function applyQuestionOrder(
       index: index + 1,
     })),
   };
+}
+
+export function findLatestAttempt(
+  attempts: readonly Attempt[],
+  fileId: string,
+): Attempt | null {
+  return (
+    attempts
+      .filter((attempt) => attempt.fileId === fileId)
+      .toSorted((left, right) => right.finishedAt - left.finishedAt)[0] ?? null
+  );
+}
+
+function orderQuestions(
+  file: StudyFile,
+  orderMode: OrderMode,
+  shuffleSeed: number,
+  latestAttempt: Attempt | null,
+) {
+  switch (orderMode) {
+    case "sequential":
+      return file.questions;
+    case "shuffle":
+      return shuffleQuestions(file.questions, file.id, shuffleSeed);
+    case "wrong-only":
+      return shuffleQuestions(
+        file.questions.filter(
+          (question) => latestAttempt?.results[question.id] === false,
+        ),
+        `${file.id}_wrong`,
+        shuffleSeed,
+      );
+  }
 }
 
 function shuffleQuestions<T extends { readonly id: string }>(

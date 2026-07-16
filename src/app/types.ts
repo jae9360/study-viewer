@@ -1,5 +1,5 @@
 export type ViewMode = "single" | "all" | "exam" | "stats";
-export type OrderMode = "sequential" | "shuffle";
+export type OrderMode = "sequential" | "shuffle" | "wrong-only";
 
 export type Folder = {
   readonly id: string;

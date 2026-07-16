@@ -150,7 +150,13 @@ function OrderButton({
 }) {
   return (
     <button className="order-toggle" type="button" onClick={onToggleOrder}>
-      {orderMode === "sequential" ? "순차" : "무작위"}
+      {orderModeLabels[orderMode]}
     </button>
   );
 }
+
+const orderModeLabels = {
+  sequential: "순차",
+  shuffle: "무작위",
+  "wrong-only": "오답만",
+} satisfies Record<OrderMode, string>;

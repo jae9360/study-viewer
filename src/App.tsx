@@ -14,6 +14,7 @@ import {
 import {
   applyQuestionOrder,
   buildFolderStudyFile,
+  findLatestAttempt,
 } from "./app/studyFileSelection";
 import type {
   AnswerOverride,
@@ -65,9 +66,22 @@ export function App() {
       buildFolderStudyFile(selectedFolder ?? null, library.files),
     [library.files, selectedFolder, selectedSourceFile],
   );
+  const latestOrderingAttempt = useMemo(
+    () =>
+      selectedStudyFile === null
+        ? null
+        : findLatestAttempt(library.attempts, selectedStudyFile.id),
+    [library.attempts, selectedStudyFile],
+  );
   const orderedStudyFile = useMemo(
-    () => applyQuestionOrder(selectedStudyFile, orderMode, shuffleSeed),
-    [orderMode, selectedStudyFile, shuffleSeed],
+    () =>
+      applyQuestionOrder(
+        selectedStudyFile,
+        orderMode,
+        shuffleSeed,
+        latestOrderingAttempt,
+      ),
+    [latestOrderingAttempt, orderMode, selectedStudyFile, shuffleSeed],
   );
   const currentQuestion = orderedStudyFile?.questions[currentIndex] ?? null;
 
@@ -245,12 +259,13 @@ export function App() {
           }
         />
         <section className="content-scroll">
-          {orderedStudyFile === null ? (
+          {orderedStudyFile === null || selectedStudyFile === null ? (
             <EmptyState />
           ) : (
             <ViewRouter
               mode={viewMode}
               file={orderedStudyFile}
+              submissionFile={selectedStudyFile}
               attempts={library.attempts}
               examDrafts={library.examDrafts}
               answerOverrides={library.answerOverrides}
@@ -261,11 +276,10 @@ export function App() {
               orderMode={orderMode}
               revealed={revealed}
               onToggleOrder={() => {
-                if (orderMode === "sequential")
+                const nextMode = nextOrderMode(orderMode);
+                if (nextMode !== "sequential")
                   setShuffleSeed((seed) => seed + 1);
-                setOrderMode(
-                  orderMode === "sequential" ? "shuffle" : "sequential",
-                );
+                setOrderMode(nextMode);
                 setCurrentIndex(0);
                 setExamIndex(0);
               }}
@@ -290,4 +304,15 @@ export function App() {
       </main>
     </div>
   );
+}
+
+function nextOrderMode(orderMode: OrderMode): OrderMode {
+  switch (orderMode) {
+    case "sequential":
+      return "shuffle";
+    case "shuffle":
+      return "wrong-only";
+    case "wrong-only":
+      return "sequential";
+  }
 }

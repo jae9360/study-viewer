@@ -17,6 +17,7 @@ import { StatsView } from "./StatsView";
 export function ViewRouter(props: {
   readonly mode: ViewMode;
   readonly file: StudyFile;
+  readonly submissionFile: StudyFile;
   readonly attempts: readonly Attempt[];
   readonly examDrafts: readonly ExamDraft[];
   readonly answerOverrides: readonly AnswerOverride[];
@@ -41,6 +42,7 @@ export function ViewRouter(props: {
     return (
       <ExamView
         file={props.file}
+        submissionFile={props.submissionFile}
         attempts={props.attempts}
         examDrafts={props.examDrafts}
         answerOverrides={props.answerOverrides}
@@ -56,7 +58,9 @@ export function ViewRouter(props: {
       />
     );
   if (props.mode === "stats")
-    return <StatsView files={[props.file]} attempts={props.attempts} />;
+    return (
+      <StatsView files={[props.submissionFile]} attempts={props.attempts} />
+    );
   return <SingleView {...props} />;
 }
 
@@ -92,7 +96,16 @@ function SingleView(props: {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [props.currentIndex, props.file.questions.length, props.onMove]);
 
-  if (props.currentQuestion === null) return <EmptyQuestion />;
+  if (props.currentQuestion === null)
+    return (
+      <>
+        <OrderStrip
+          orderMode={props.orderMode}
+          onToggleOrder={props.onToggleOrder}
+        />
+        <EmptyQuestion />
+      </>
+    );
   const question = props.currentQuestion;
   const overrideMap = buildOverrideMap(props.answerOverrides, props.file.id);
   return (
@@ -150,7 +163,16 @@ function AllView(props: {
   readonly orderMode: OrderMode;
   readonly onToggleOrder: () => void;
 }) {
-  if (props.file.questions.length === 0) return <EmptyQuestion />;
+  if (props.file.questions.length === 0)
+    return (
+      <>
+        <OrderStrip
+          orderMode={props.orderMode}
+          onToggleOrder={props.onToggleOrder}
+        />
+        <EmptyQuestion />
+      </>
+    );
   const overrideMap = buildOverrideMap(props.answerOverrides, props.file.id);
   return (
     <>

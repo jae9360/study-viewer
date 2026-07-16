@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { findLatestAttempt } from "../app/studyFileSelection";
 import type {
   AnswerOverride,
   Attempt,
@@ -18,6 +19,7 @@ import { ProgressStrip } from "./ProgressControls";
 
 export function ExamView({
   file,
+  submissionFile,
   attempts,
   examDrafts,
   answerOverrides,
@@ -32,6 +34,7 @@ export function ExamView({
   onClearExamDraft,
 }: {
   readonly file: StudyFile;
+  readonly submissionFile: StudyFile;
   readonly attempts: readonly Attempt[];
   readonly examDrafts: readonly ExamDraft[];
   readonly answerOverrides: readonly AnswerOverride[];
@@ -45,9 +48,11 @@ export function ExamView({
   readonly onSaveExamDraft: (draft: ExamDraft) => void;
   readonly onClearExamDraft: (fileId: string) => void;
 }) {
-  const latestAttempt = findLatestAttempt(attempts, file.id);
-  const draft = examDrafts.find((item) => item.fileId === file.id) ?? null;
-  const submittedAttempt = draft === null ? latestAttempt : null;
+  const latestAttempt = findLatestAttempt(attempts, submissionFile.id);
+  const draft =
+    examDrafts.find((item) => item.fileId === submissionFile.id) ?? null;
+  const submittedAttempt =
+    orderMode === "wrong-only" || draft !== null ? null : latestAttempt;
   const [startedAt, setStartedAt] = useState(draft?.startedAt ?? Date.now());
   const [now, setNow] = useState(Date.now());
   const [answers, setAnswers] = useState<Record<string, string>>(
@@ -73,7 +78,7 @@ export function ExamView({
   }, [draft, submittedAttempt]);
 
   const question = file.questions[currentIndex] ?? null;
-  const overrideMap = buildOverrideMap(answerOverrides, file.id);
+  const overrideMap = buildOverrideMap(answerOverrides, submissionFile.id);
   const answerResults = collectAnswerResults({
     questions: file.questions,
     answers,
@@ -113,7 +118,11 @@ export function ExamView({
   function saveCurrent(): boolean {
     if (question === null) return false;
     const nextAnswers = answers;
-    onSaveExamDraft({ fileId: file.id, answers: nextAnswers, startedAt });
+    onSaveExamDraft({
+      fileId: submissionFile.id,
+      answers: nextAnswers,
+      startedAt,
+    });
     setSavedQuestionIds((previous) => new Set(previous).add(question.id));
     if (currentIndex >= file.questions.length - 1) {
       return submitExam(nextAnswers);
@@ -136,13 +145,27 @@ export function ExamView({
     }
     if (question === null) return false;
     const finishedAt = Date.now();
-    const score = gradeAnswers(file.questions, nextAnswers, overrideMap);
+    const attemptAnswers =
+      orderMode === "wrong-only"
+        ? buildWrongOnlyAttemptAnswers({
+            visibleQuestions: file.questions,
+            submissionQuestions: submissionFile.questions,
+            answers: nextAnswers,
+            overrideMap,
+          })
+        : nextAnswers;
+    const score = gradeAnswers(
+      submissionFile.questions,
+      attemptAnswers,
+      overrideMap,
+    );
     onSaveAttempt({
       id: createId("attempt"),
-      fileId: file.id,
+      fileId: submissionFile.id,
       round:
-        attempts.filter((attempt) => attempt.fileId === file.id).length + 1,
-      answers: nextAnswers,
+        attempts.filter((attempt) => attempt.fileId === submissionFile.id)
+          .length + 1,
+      answers: attemptAnswers,
       results: score.results,
       score: score.score,
       total: score.total,
@@ -150,8 +173,10 @@ export function ExamView({
       finishedAt,
       durationMs: finishedAt - startedAt,
     });
-    onClearExamDraft(file.id);
-    setSavedQuestionIds(new Set(file.questions.map((item) => item.id)));
+    onClearExamDraft(submissionFile.id);
+    setSavedQuestionIds(
+      new Set(submissionFile.questions.map((item) => item.id)),
+    );
     window.alert("저장되었습니다.");
     return true;
   }
@@ -164,7 +189,7 @@ export function ExamView({
     const nextStartedAt = Date.now();
     const emptyAnswers: Record<string, string> = {};
     onSaveExamDraft({
-      fileId: file.id,
+      fileId: submissionFile.id,
       answers: emptyAnswers,
       startedAt: nextStartedAt,
     });
@@ -274,20 +299,39 @@ function ChevronIcon({ pointsDown }: { readonly pointsDown: boolean }) {
   );
 }
 
-function findLatestAttempt(
-  attempts: readonly Attempt[],
-  fileId: string,
-): Attempt | null {
-  const fileAttempts = attempts.filter((attempt) => attempt.fileId === fileId);
-  return fileAttempts.at(-1) ?? null;
-}
-
 function EmptyExam() {
   return (
     <div className="empty">
       <h2>시험 볼 문제가 없습니다.</h2>
     </div>
   );
+}
+
+function buildWrongOnlyAttemptAnswers({
+  visibleQuestions,
+  submissionQuestions,
+  answers,
+  overrideMap,
+}: {
+  readonly visibleQuestions: readonly Question[];
+  readonly submissionQuestions: readonly Question[];
+  readonly answers: Readonly<Record<string, string>>;
+  readonly overrideMap: ReadonlyMap<string, string>;
+}): Record<string, string> {
+  const visibleQuestionIds = new Set(visibleQuestions.map((item) => item.id));
+  const attemptAnswers: Record<string, string> = {};
+
+  for (const question of submissionQuestions) {
+    if (visibleQuestionIds.has(question.id)) {
+      attemptAnswers[question.id] = answers[question.id] ?? "";
+      continue;
+    }
+
+    const answer = effectiveAnswer(question, overrideMap);
+    if (answer !== null) attemptAnswers[question.id] = answer;
+  }
+
+  return attemptAnswers;
 }
 
 function questionReference(
